@@ -56,6 +56,122 @@ class Controller:
                 print("Blog already exists")
         else:
             return None
+        
+    def retrieve_blogs(self, keyword):
+        if self.login_status:
+
+            retrieved_blogs = []
+
+            for b in self.blogs:
+                if keyword in b.name:
+                    retrieved_blogs.append(b)
+
+            return retrieved_blogs
+        
+        else:
+            return None
 
 
+    def update_blog(self, id, new_id, new_name, new_url, new_email):
+        if self.login_status and len(self.blogs) > 0:
+
+            if self.search_blog(new_id) is None:
+            
+                if self.current_blog is not None:
+
+                    if self.current_blog.id != id:
+                        blog_for_update = self.search_blog(id)
+
+                        blog_for_update.id = new_id
+                        blog_for_update.name = new_name
+                        blog_for_update.url = new_url
+                        blog_for_update.email = new_email
+
+                        return True
+                    
+                    else:
+                        return False
+                
+                else:
+
+                    blog_for_update = self.search_blog(id)
+
+                    blog_for_update.id = new_id
+                    blog_for_update.name = new_name
+                    blog_for_update.url = new_url
+                    blog_for_update.email = new_email
+
+                    return True
+
+            else:
+                if id == new_id:
+                    if self.current_blog is not None:
+
+                        if self.current_blog.id != id:
+                            blog_for_update = self.search_blog(id)
+
+                            blog_for_update.name = new_name
+                            blog_for_update.url = new_url
+                            blog_for_update.email = new_email
+
+                            return True
+                        
+                        else:
+                           return False
+                    
+                    else:
+                        blog_for_update = self.search_blog(id)
+
+                        blog_for_update.name = new_name
+                        blog_for_update.url = new_url
+                        blog_for_update.email = new_email
+
+                        return True
+                
+                else:
+                    return False
+        
+        else:
+            return False
+        
+    def delete_blog(self, id):
+        if self.login_status and len(self.blogs) > 0:
+
+            if self.search_blog(id) is not None:
+            
+                if self.current_blog is not None:
+
+                    if self.current_blog.id != id:
+                        for b in self.blogs:
+                            if b.id == id:
+                                self.blogs.remove(b)
+
+                        return True
+                    
+                    else:
+                        return False
+                
+                else:
+
+                    for b in self.blogs:
+                         if b.id == id:
+                            self.blogs.remove(b)
+
+                    return True
+
+            else:
+                return False
+        
+        else:
+            return False
+
+    def list_blogs(self):
+        if self.login_status:
+
+            return self.blogs
+        
+        else:
+
+            return None
+        
     
