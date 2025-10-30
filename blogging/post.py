@@ -2,12 +2,12 @@ from datetime import datetime
 
 class Post:
 
-    def __init__(self, code, title, text, creation, update):
+    def __init__(self, code, title, text, creation = datetime.now(), update = datetime.now()):
         self.code = code
         self.title = title
         self.text = text
-        self.creation = datetime.now()
-        self.update = datetime.now()
+        self.creation = creation
+        self.update = update
 
     def __str__(self):
         # returns printable string representation of a post

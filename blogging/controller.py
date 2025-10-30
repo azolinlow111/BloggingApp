@@ -202,4 +202,35 @@ class Controller:
         
         else:
             return False
+        
+    def search_post(self, code):
+        if self.login_status:
+            for p in self.current_blog.posts:
+                if p.code == code:
+                    return p
+                
+        else:
+            return None
+        
+    def create_post(self, code, title, text):
+        if self.login_status:
+
+            if self.get_current_blog() is not None:
+
+                if self.search_post(code) is None:
+                    p = Post(code, title, text)
+
+                    self.current_blog.posts.append(p)
+
+                    return p
+                    
+                else:
+                    return None
+                
+            else:
+                return None
+        
+        else:
+            return None
+
 

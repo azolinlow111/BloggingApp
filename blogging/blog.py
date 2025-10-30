@@ -1,11 +1,11 @@
 class Blog:
 
-    def __init__(self, id, name, url, email):
+    def __init__(self, id, name, url, email, posts = [], post_counter = 0):
         self.id = id
         self.name = name
         self.url = url
         self.email = email
-        self.posts[] = posts[]
+        self.posts = posts
         self.post_counter = post_counter
 
     def __eq__(self, other):
