@@ -142,9 +142,7 @@ class Controller:
                 if self.current_blog is not None:
 
                     if self.current_blog.id != id:
-                        for b in self.blogs:
-                            if b.id == id:
-                                self.blogs.remove(b)
+                        self.blogs.remove(self.search_blog(id))
 
                         return True
                     
@@ -174,4 +172,34 @@ class Controller:
 
             return None
         
-    
+    def set_current_blog(self, id):
+        if self.login_status and len(self.blogs) > 0:
+
+            if self.search_blog(id) is not None:
+                self.current_blog = self.search_blog(id)
+
+                return self.current_blog
+
+            else:
+                return None
+
+
+        else:
+            return None
+        
+    def get_current_blog(self):
+        if self.login_status:
+            return self.current_blog
+        
+        else:
+            return None
+        
+    def unset_current_blog(self):
+        if self.login_status:
+            self.current_blog = None
+
+            return self.current_blog
+        
+        else:
+            return False
+

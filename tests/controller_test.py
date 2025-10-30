@@ -126,7 +126,6 @@ class ControllerTest(TestCase):
 		# cannot do operation without logging in
 		self.assertFalse(self.controller.update_blog(1111114444, 1111114444, "Short Travel", "short_travel", "short.travel@gmail.com"), 
 			"cannot update blog without logging in")
-
 		# login
 		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
 

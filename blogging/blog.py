@@ -5,8 +5,8 @@ class Blog:
         self.name = name
         self.url = url
         self.email = email
-        #self.posts[] = posts[]
-        #self.post_counter = post_counter
+        self.posts[] = posts[]
+        self.post_counter = post_counter
 
     def __eq__(self, other):
         return ((self.id == other.id) and (self.name == other.name) and (self.url == other.url) and (self.email == other.email))
