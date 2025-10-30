@@ -1,4 +1,4 @@
-class blog:
+class Blog:
 
     def __init__(self, id, name, url, email):
         self.id = id

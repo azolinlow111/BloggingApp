@@ -1,6 +1,6 @@
 from datetime import datetime
 
-class post:
+class Post:
 
     def __init__(self, code, title, text, creation, update):
         self.code = code
