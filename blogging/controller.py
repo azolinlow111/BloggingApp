@@ -32,21 +32,30 @@ class Controller:
         else:
             return False
 
-    def create_blog(self, id, name, url, email):
-        if not search_blog(self, id):
-        
-            b = Blog(id, name, url, email)
-
-            self.blogs.append(b)
-        
-        else:
-            print("Blog already exists")
-
-
     def search_blog(self, id):
 
         for b in self.blogs:
             if id == b.id:
-                return True
+                return b
 
-        return False
+        return None
+    
+    def create_blog(self, id, name, url, email):
+        if self.login_status:
+            if not self.search_blog(id):
+            
+                b = Blog(id, name, url, email)
+
+                self.blogs.append(b)
+
+                print(f"\n\nPRINTING B: {b}")
+
+                return b
+            
+            else:
+                print("Blog already exists")
+        else:
+            return None
+
+
+    
