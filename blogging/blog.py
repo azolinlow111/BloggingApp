@@ -1,3 +1,5 @@
+from blogging.post import Post
+
 class Blog:
 
     def __init__(self, id, name, url, email, posts = [], post_counter = 0):
@@ -5,6 +7,7 @@ class Blog:
         self.name = name
         self.url = url
         self.email = email
+        
         self.posts = posts
         self.post_counter = post_counter
 
@@ -13,3 +16,10 @@ class Blog:
     
     def __str__(self):
         return f"ID Number: {self.id}. Name: {self.name}. URL: {self.url}. Email: {self.email}."
+    
+    def add_post(self, title, text):
+        self.post_counter +=1        
+        new_post = Post(self.post_counter, title, text)
+        self.posts.append(new_post)
+        
+        return new_post

@@ -2,7 +2,7 @@ from datetime import datetime
 
 class Post:
 
-    def __init__(self, code, title, text, creation = datetime.now(), update = datetime.now()):
+    def __init__(self, code, title, text, creation = None, update = None):
         self.code = code
         self.title = title
         self.text = text
