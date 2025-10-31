@@ -269,4 +269,13 @@ class Controller:
         
         return deleted_post
         
+    
+    def list_posts(self): 
+        posts_li = None
+        if self.login_status:
+            if self.current_blog is not None: 
+                posts_li = list(reversed(self.current_blog.posts))
+                
+        return posts_li
+        
 
