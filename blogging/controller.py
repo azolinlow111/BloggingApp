@@ -256,3 +256,17 @@ class Controller:
         return post
 
 
+    def delete_post(self, code): 
+        deleted_post = None 
+        
+        if self.login_status: 
+            if self.current_blog is not None:
+                
+                deleted_post = self.search_post(code)
+            
+                if deleted_post is not None: 
+                    self.current_blog.posts.remove(deleted_post)
+        
+        return deleted_post
+        
+
