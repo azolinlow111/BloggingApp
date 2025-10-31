@@ -225,5 +225,19 @@ class Controller:
         
         return post_created 
         
+    def retrieve_posts(self, keyword): 
+        posts_retrieved = []
+        
+        if self.login_status:                                            #check user is logged in 
+            if self.current_blog is not None:                           #check current blog
+                for p in self.current_blog.posts:                       #loop over posts in blog
+                    if keyword in p.title or keyword in p.text:         #check keyword in text or title 
+                        posts_retrieved.append(p)                       #append post to list 
+        
+                return posts_retrieved
+            else: 
+                return None
+        else: 
+            return None
 
 
