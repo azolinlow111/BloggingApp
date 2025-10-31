@@ -1,5 +1,6 @@
 from blogging.blog import Blog
 from blogging.post import Post
+from datetime import datetime
 
 class Controller:
     def __init__(self):
@@ -228,7 +229,7 @@ class Controller:
     def retrieve_posts(self, keyword): 
         posts_retrieved = []
         
-        if self.login_status:                                            #check user is logged in 
+        if self.login_status:                                           #check user is logged in 
             if self.current_blog is not None:                           #check current blog
                 for p in self.current_blog.posts:                       #loop over posts in blog
                     if keyword in p.title or keyword in p.text:         #check keyword in text or title 
@@ -239,5 +240,19 @@ class Controller:
                 return None
         else: 
             return None
+    
+    def update_post(self, code, title, text): 
+        post = None
+        if self.login_status:  
+            if self.current_blog is not None:
+            
+                post = self.search_post(code)
+                
+                if post is not None:
+                    post.title = title 
+                    post.text = text
+                    post.update = datetime.now()
+            
+        return post
 
 

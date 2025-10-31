@@ -23,3 +23,5 @@ class Blog:
         self.posts.append(new_post)
         
         return new_post
+        
+    
