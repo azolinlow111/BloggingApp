@@ -40,7 +40,7 @@ class ControllerTest(TestCase):
 		# add one blog
 		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
 		actual_blog = self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
-		print(f"\n\nPRINTING ACTUAL_BLOG: {actual_blog}")
+		
 		self.assertIsNotNone(actual_blog, "blog created cannot be null")
 
 		# implement __eq__(self, other) in Blog to compare blogs based on its attributes

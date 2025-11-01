@@ -2,13 +2,17 @@ from blogging.post import Post
 
 class Blog:
 
-    def __init__(self, id, name, url, email, posts = [], post_counter = 0):
+    def __init__(self, id, name, url, email, posts =None, post_counter =0):
         self.id = id
         self.name = name
         self.url = url
         self.email = email
         
-        self.posts = posts
+        if posts is not None: 
+            self.posts = posts
+        else: 
+            self.posts = []
+        
         self.post_counter = post_counter
 
     def __eq__(self, other):

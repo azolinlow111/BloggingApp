@@ -48,9 +48,6 @@ class Controller:
                 b = Blog(id, name, url, email)
 
                 self.blogs.append(b)
-
-                print(f"\n\nPRINTING B: {b}")
-
                 return b
             
             else:
@@ -74,66 +71,34 @@ class Controller:
 
 
     def update_blog(self, id, new_id, new_name, new_url, new_email):
-        if self.login_status and len(self.blogs) > 0:
-
-            if self.search_blog(new_id) is None:
+        update = False
+        if self.login_status:  #check is logged in
             
-                if self.current_blog is not None:
-
-                    if self.current_blog.id != id:
-                        blog_for_update = self.search_blog(id)
-
+            blog_for_update = self.search_blog(id)
+            if self.current_blog is None or self.current_blog != blog_for_update: 
+                
+                if blog_for_update is not None: 
+                    
+                    if new_id == id: #check if ids remain unchangend 
                         blog_for_update.id = new_id
                         blog_for_update.name = new_name
                         blog_for_update.url = new_url
                         blog_for_update.email = new_email
-
-                        return True
-                    
-                    else:
-                        return False
-                
-                else:
-
-                    blog_for_update = self.search_blog(id)
-
-                    blog_for_update.id = new_id
-                    blog_for_update.name = new_name
-                    blog_for_update.url = new_url
-                    blog_for_update.email = new_email
-
-                    return True
-
-            else:
-                if id == new_id:
-                    if self.current_blog is not None:
-
-                        if self.current_blog.id != id:
-                            blog_for_update = self.search_blog(id)
-
-                            blog_for_update.name = new_name
-                            blog_for_update.url = new_url
-                            blog_for_update.email = new_email
-
-                            return True
                         
-                        else:
-                           return False
-                    
-                    else:
-                        blog_for_update = self.search_blog(id)
-
+                        update = True
+                
+                    elif self.search_blog(new_id) is None: #check if new_id is not in list 
+                        
+                        blog_for_update.id = new_id
                         blog_for_update.name = new_name
                         blog_for_update.url = new_url
                         blog_for_update.email = new_email
-
-                        return True
-                
-                else:
-                    return False
+                        
+                        update = True
         
-        else:
-            return False
+            return update
+                    
+
         
     def delete_blog(self, id):
         if self.login_status and len(self.blogs) > 0:
@@ -215,7 +180,6 @@ class Controller:
                     if p.code == code:
                         post = p #get post to be returned 
         return post
-                
         
     def create_post(self, title, text):
         post_created = None
@@ -227,14 +191,13 @@ class Controller:
         return post_created 
         
     def retrieve_posts(self, keyword): 
-        posts_retrieved = []
-        
-        if self.login_status:                                           #check user is logged in 
+        if self.login_status:                                           #check user is logged in
+            posts_retrieved = [] 
+            
             if self.current_blog is not None:                           #check current blog
                 for p in self.current_blog.posts:                       #loop over posts in blog
-                    if keyword in p.title or keyword in p.text:         #check keyword in text or title 
+                    if ((keyword in p.title) or (keyword in p.text)):   #check keyword in text or title 
                         posts_retrieved.append(p)                       #append post to list 
-        
                 return posts_retrieved
             else: 
                 return None
@@ -252,12 +215,14 @@ class Controller:
                     post.title = title 
                     post.text = text
                     post.update = datetime.now()
+                    
+                    
             
         return post
 
 
     def delete_post(self, code): 
-        deleted_post = None 
+        deleted = False
         
         if self.login_status: 
             if self.current_blog is not None:
@@ -266,8 +231,9 @@ class Controller:
             
                 if deleted_post is not None: 
                     self.current_blog.posts.remove(deleted_post)
+                    deleted = True
         
-        return deleted_post
+        return deleted
         
     
     def list_posts(self): 
