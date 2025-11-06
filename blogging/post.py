@@ -9,14 +9,14 @@ class Post:
         self.creation = creation
         self.update = update
 
-    def __str__(self):
+    def __str__(self) -> str:
         # returns printable string representation of a post
-        return f"Last Edited: {self.update}. Title: {self.title}. Post Content: {self.text}"
+        return f"Title: {self.title}. Post Content: {self.text}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         # returns string representation of a post
-        return f"Integer Code: {self.code}. Created: {self.creation}. Updated: {self.update}. Title: {self.title}. Post Content: {self.text}"
+        return f"Integer Code: {self.code}. Title: {self.title}. Post Content: {self.text}"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         # compares post based on code, title, text
         return (self.code == other.code) and (self.title == other.title) and (self.text == other.text)
