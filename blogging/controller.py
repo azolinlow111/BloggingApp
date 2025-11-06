@@ -8,7 +8,8 @@ class Controller:
         self.current_blog = None
         self.login_status = False
 
-    def login(self, username, password):
+    # Checks if user is logged in and if not logs them in if they use the correct username and password
+    def login(self, username, password) -> bool:
         if self.login_status:
             return False
         
@@ -24,8 +25,9 @@ class Controller:
 
             else:
                 return False
-        
-    def logout(self):
+    
+    # Logout the user if they are logged in
+    def logout(self) -> bool:
         if self.login_status:
             self.login_status = False
             return True
@@ -33,7 +35,8 @@ class Controller:
         else:
             return False
 
-    def search_blog(self, id):
+    # searches for a blog by id, if found, returns the blog, if not returns None
+    def search_blog(self, id) -> Blog:
 
         for b in self.blogs:
             if id == b.id:
@@ -41,8 +44,10 @@ class Controller:
 
         return None
     
-    def create_blog(self, id, name, url, email):
+    # Creates a new blog if it does not already exist
+    def create_blog(self, id, name, url, email) -> Blog:
         if self.login_status:
+            # check if blog exists
             if not self.search_blog(id):
             
                 b = Blog(id, name, url, email)
@@ -55,6 +60,7 @@ class Controller:
         else:
             return None
         
+    # Retrieves all blogs containing keyword
     def retrieve_blogs(self, keyword):
         if self.login_status:
 
@@ -69,8 +75,8 @@ class Controller:
         else:
             return None
 
-
-    def update_blog(self, id, new_id, new_name, new_url, new_email):
+    # Update information about a blog, can change id if its not already in use
+    def update_blog(self, id, new_id, new_name, new_url, new_email) -> bool:
         update = False
         if self.login_status:  #check is logged in
             
@@ -98,8 +104,7 @@ class Controller:
         
             return update
                     
-
-        
+    # Removes a blog if it exists
     def delete_blog(self, id):
         if self.login_status and len(self.blogs) > 0:
 
@@ -129,6 +134,7 @@ class Controller:
         else:
             return False
 
+    # lists the current blogs
     def list_blogs(self):
         if self.login_status:
 
@@ -137,7 +143,8 @@ class Controller:
         else:
 
             return None
-        
+    
+    # sets the current blog based on id
     def set_current_blog(self, id):
         if self.login_status and len(self.blogs) > 0:
 
@@ -153,6 +160,7 @@ class Controller:
         else:
             return None
         
+    # Returns the current blog
     def get_current_blog(self):
         if self.login_status:
             return self.current_blog
@@ -160,6 +168,7 @@ class Controller:
         else:
             return None
         
+    # Sets current blog to None
     def unset_current_blog(self):
         if self.login_status:
             self.current_blog = None
@@ -171,7 +180,8 @@ class Controller:
             
     # ------POST METHODS--------
         
-    def search_post(self, code):
+    # Searches post in a blog by code and returns if found
+    def search_post(self, code) -> Post:
         post = None
         
         if self.login_status: #check user is logged in 
@@ -181,7 +191,8 @@ class Controller:
                         post = p #get post to be returned 
         return post
         
-    def create_post(self, title, text):
+    # Creates a new post if it doesn't already exist
+    def create_post(self, title, text) -> Post:
         post_created = None
         
         if self.login_status:                #check if user is logged in 
@@ -190,6 +201,7 @@ class Controller:
         
         return post_created 
         
+    # Returns a list of posts that contain keyword
     def retrieve_posts(self, keyword): 
         if self.login_status:                                           #check user is logged in
             posts_retrieved = [] 
@@ -204,7 +216,8 @@ class Controller:
         else: 
             return None
     
-    def update_post(self, code, title, text): 
+    # Updates a post if it exists
+    def update_post(self, code, title, text) -> Post: 
         post = None
         if self.login_status:  
             if self.current_blog is not None:
@@ -216,12 +229,10 @@ class Controller:
                     post.text = text
                     post.update = datetime.now()
                     
-                    
-            
         return post
 
-
-    def delete_post(self, code): 
+    # Removes a post if it exists
+    def delete_post(self, code) -> bool: 
         deleted = False
         
         if self.login_status: 
@@ -235,7 +246,7 @@ class Controller:
         
         return deleted
         
-    
+    # returns a list of all posts within a blog
     def list_posts(self): 
         posts_li = None
         if self.login_status:

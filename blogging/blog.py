@@ -15,16 +15,16 @@ class Blog:
         
         self.post_counter = post_counter
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return ((self.id == other.id) and (self.name == other.name) and (self.url == other.url) and (self.email == other.email))
     
-    def __str__(self):
+    def __str__(self) -> str:
         return f"ID Number: {self.id}. Name: {self.name}. URL: {self.url}. Email: {self.email}."
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"ID Number: {self.id}. Name: {self.name}. URL: {self.url}. Email: {self.email}."
     
-    def add_post(self, title, text):
+    def add_post(self, title, text) -> Post:
         self.post_counter +=1        
         new_post = Post(self.post_counter, title, text)
         self.posts.append(new_post)
