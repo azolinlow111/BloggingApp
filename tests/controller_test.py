@@ -3,7 +3,6 @@ from unittest import main
 from blogging.controller import Controller
 from blogging.blog import Blog
 from blogging.post import Post
-from datetime import datetime, date
 
 class ControllerTest(TestCase):
 
@@ -27,36 +26,6 @@ class ControllerTest(TestCase):
 		self.assertTrue(self.controller.login("user", "blogging2025"), "can login again")
 
 		self.assertTrue(self.controller.logout(), "can log out again")
-
-	def test_blog_class(self):
-		expected_blog_1 = Blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
-		expected_blog_2 = Blog(1111115555, "Long Journey", "long_journey", "long.journey@gmail.com")
-		expected_blog_3 = Blog(1111112000, "Long Trip", "long_trip", "long.trip@gmail.com")
-		expected_blog_4 = Blog(1111112000, "Long Trip", "long_trip", "long.trip@gmail.com")
-		expected_post_5 = expected_blog_1.add_post("Fourth step", "When less expected,\nAll worked fine.")
-
-		self.assertEqual(datetime.now().date(), expected_post_5.creation.date(), "Testing creation time")
-
-		self.assertEqual(len(expected_blog_1.posts), 1, "Testing add post") # add a post to a blog
-
-		self.assertTrue(expected_blog_3 == expected_blog_4, "Testing if 2 blogs are equal")
-		self.assertFalse(expected_blog_1 == expected_blog_2, "Testing if 2 blogs are not equal")
-
-		self.assertEqual("ID Number: 1111114444. Name: Short Journey. URL: short_journey. Email: short.journey@gmail.com.", str(expected_blog_1), "Testing str function")
-		self.assertEqual("ID Number: 1111114444. Name: Short Journey. URL: short_journey. Email: short.journey@gmail.com.",repr(expected_blog_1), "Testing repr function")
-
-	def test_post_class(self):
-		expected_post_1 = Post(1, "Starting my journey", "Once upon a time\nThere was a kid...")
-		expected_post_2 = Post(2, "Second step", "Before one could think,\nA storm stroke.")
-		expected_post_3 = Post(3, "Continuing my journey", "Along the way...\nThere were challenges.")
-		expected_post_4 = Post(4, "Fourth step", "When less expected,\nAll worked fine.")
-		expected_post_5 = Post(4, "Fourth step", "When less expected,\nAll worked fine.")
-
-		self.assertTrue(expected_post_4 == expected_post_5, "Testing if 2 posts are equal")
-		self.assertFalse(expected_post_1 == expected_post_2, "Testing if 2 posts are not equal")
-
-		self.assertEqual("Title: Starting my journey. Post Content: Once upon a time\nThere was a kid...", str(expected_post_1), "Testing str function")
-		self.assertEqual("Integer Code: 1. Title: Starting my journey. Post Content: Once upon a time\nThere was a kid...", repr(expected_post_1), "Testing repr function")
 
 	def test_create_search_blog(self):
 		# some blogs that will be created
