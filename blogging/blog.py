@@ -1,5 +1,7 @@
 from blogging.post import Post
 
+import datetime
+
 class Blog:
 
     def __init__(self, id, name, url, email, posts =None, post_counter =0):
@@ -26,7 +28,7 @@ class Blog:
     
     def add_post(self, title, text) -> Post:
         self.post_counter +=1        
-        new_post = Post(self.post_counter, title, text)
+        new_post = Post(self.post_counter, title, text, datetime.datetime.now())
         self.posts.append(new_post)
         
         return new_post

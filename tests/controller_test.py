@@ -3,6 +3,7 @@ from unittest import main
 from blogging.controller import Controller
 from blogging.blog import Blog
 from blogging.post import Post
+from datetime import datetime, date
 
 class ControllerTest(TestCase):
 
@@ -33,6 +34,8 @@ class ControllerTest(TestCase):
 		expected_blog_3 = Blog(1111112000, "Long Trip", "long_trip", "long.trip@gmail.com")
 		expected_blog_4 = Blog(1111112000, "Long Trip", "long_trip", "long.trip@gmail.com")
 		expected_post_5 = expected_blog_1.add_post("Fourth step", "When less expected,\nAll worked fine.")
+
+		self.assertEqual(datetime.now().date(), expected_post_5.creation.date(), "Testing creation time")
 
 		self.assertEqual(len(expected_blog_1.posts), 1, "Testing add post") # add a post to a blog
 
