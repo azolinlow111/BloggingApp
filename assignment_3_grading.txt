@@ -1,0 +1,85 @@
+Assignment 2 Grading:
+---------------------
+Student Group "group028" (Aislinn Low & Valeria Gomez)
+Grade: 83/100, 83%
+
+Python test results:
+------------------------
+
+Results for controller_test.py:
+Blog already exists
+
+test_create_post (tests.controller_test.ControllerTest) ... ok
+test_create_search_blog (tests.controller_test.ControllerTest) ... ok
+test_delete_blog (tests.controller_test.ControllerTest) ... ok
+test_delete_post (tests.controller_test.ControllerTest) ... ok
+test_list_blogs (tests.controller_test.ControllerTest) ... ok
+test_list_posts (tests.controller_test.ControllerTest) ... ok
+test_login_logout (tests.controller_test.ControllerTest) ... ok
+test_retrieve_blogs (tests.controller_test.ControllerTest) ... ok
+test_retrieve_posts (tests.controller_test.ControllerTest) ... ok
+test_set_get_current_blog (tests.controller_test.ControllerTest) ... ok
+test_update_blog (tests.controller_test.ControllerTest) ... ok
+test_update_post (tests.controller_test.ControllerTest) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.001s
+
+OK
+
+Results for blog_test.py:
+
+test_blog_class (tests.blog_test.BlogTester) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK
+
+Results for post_test.py:
+
+test_post_class (tests.post_test.PostTester) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK
+
+
+Summary:
+Passed tests: 14
+Failed tests: 0
+
+Unit tests: 5/15 points, many aspects of testing missed here (e.g. timestamps, post id incrementation, meticulous equality checking), also lack of test modularization. 
+Controller tests: 60/60 points.
+
+Version Control (git log):
+--------------------------
+648aa5f	Aislinn Low	Sat Nov 8 10:51:44 2025 -0800	Added files necessary for a4
+73b17c1	Aislinn Low	Fri Nov 7 15:24:01 2025 -0800	Added separate blog and post test files
+2ce8d57	Aislinn Low	Fri Nov 7 15:09:43 2025 -0800	Added more tests and final comments
+666f9c6	Aislinn Low	Thu Nov 6 11:21:41 2025 -0800	Added comments
+4d0d301	Aislinn Low	Thu Nov 6 10:59:48 2025 -0800	Added our own tests
+065306c	Valeria Gomez	Fri Oct 31 19:15:09 2025 -0700	fixed issue with posts functions
+b0a71e7	Valeria Gomez	Fri Oct 31 01:59:40 2025 -0700	implemented list_posts() method
+1366e06	Valeria Gomez	Fri Oct 31 01:00:03 2025 -0700	inplemented delete_post()
+e212e47	Valeria Gomez	Fri Oct 31 00:52:03 2025 -0700	inplemented update_post()
+387f338	Valeria Gomez	Fri Oct 31 00:25:05 2025 -0700	added retrieve_posts functionality
+ab2cedf	Valeria Gomez	Fri Oct 31 00:01:17 2025 -0700	create and search post methods implemented
+548580b	Aislinn Low	Thu Oct 30 12:56:57 2025 -0700	Code not finished
+2f16a79	Aislinn Low	Thu Oct 30 12:37:56 2025 -0700	Added current blog functionality
+bd2a6a1	Aislinn Low	Thu Oct 30 12:24:30 2025 -0700	Added update blog, delete blogs, list blogs
+8bb3508	Aislinn Low	Thu Oct 30 11:11:30 2025 -0700	Added create blog and search blog functionality
+7435595	Aislinn Low	Thu Oct 30 10:50:37 2025 -0700	Added login logout functionality
+5a86c50	Aislinn Low	Sun Oct 26 16:19:57 2025 -0700	Added controller and blog functions/classes
+6d28656	Aislinn Low	Sun Oct 26 15:57:28 2025 -0700	Added Post class and functions
+81dba9f	Aislinn Low	Sun Oct 26 15:04:07 2025 -0700	Added necessary files for classes
+959d076	Roberto Bittencourt	Tue Oct 21 14:14:13 2025 -0700	Added controller tests and configuration files
+c025491	Roberto Bittencourt	Tue Oct 21 21:08:52 2025 +0000	Initial commit
+
+Solid commit log, demonstrating collaborative progress. 5/5 points.
+
+Modularization: 7/10, certain functionality should be shifted to post.py. 
+Documentation: 8/10, each function should have at least one comment. 
+Other remarks:
+Missing student info files described in assignment specification (-2 points).
