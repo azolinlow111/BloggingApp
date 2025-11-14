@@ -9,6 +9,7 @@ from blogging.exception.invalid_logout_exception import InvalidLogoutException
 from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
+from blogging.dao.blog_dao_json import BlogDAOJSON
 
 class Controller:
     def __init__(self):
@@ -46,16 +47,7 @@ class Controller:
 
     # ------BLOG METHODS--------
 
-    # searches for a blog by id, if found, returns the blog, if not returns None
-    def search_blog(self, id) -> Blog:
-        if self.login_status:
-            for b in self.blogs:
-                if id == b.id:
-                    return b
-
-            return None
-        else:
-            raise IllegalAccessException()
+    
     
     # Creates a new blog if it does not already exist
     def create_blog(self, id, name, url, email) -> Blog:

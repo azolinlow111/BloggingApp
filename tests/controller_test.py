@@ -11,6 +11,7 @@ from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
+
 class ControllerTest(TestCase):
 
 	def setUp(self):
