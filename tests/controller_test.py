@@ -3,29 +3,49 @@ from unittest import main
 from blogging.controller import Controller
 from blogging.blog import Blog
 from blogging.post import Post
+from blogging.configuration import Configuration
+from blogging.exception.invalid_login_exception import InvalidLoginException
+from blogging.exception.duplicate_login_exception import DuplicateLoginException
+from blogging.exception.invalid_logout_exception import InvalidLogoutException
+from blogging.exception.illegal_access_exception import IllegalAccessException
+from blogging.exception.illegal_operation_exception import IllegalOperationException
+from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 class ControllerTest(TestCase):
 
 	def setUp(self):
+		# set autosave to False to ignore testing persistence
+		self.configuration = Configuration()
+		self.configuration.__class__.autosave = False
 		self.controller = Controller()
 
 	def test_login_logout(self):
 
-		self.assertFalse(self.controller.logout(), "log out only after being logged in")
+		with self.assertRaises(InvalidLogoutException, msg="log out only after being logged in"):
+			self.controller.logout()
 
-		self.assertFalse(self.controller.login("theuser", "blogging2025"), "login in with incorrect username")
+		with self.assertRaises(InvalidLoginException, msg="login in with incorrect username"):
+			self.controller.login("incorrectuser", "123456")
 
-		self.assertFalse(self.controller.login("user", "123456"), "login in with incorrect password")
+		with self.assertRaises(InvalidLoginException, msg="login in with incorrect password"):
+			self.controller.login("user", "abadpassword")
 
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 
-		self.assertFalse(self.controller.login("user", "blogging2025"), "cannot login again while still logged in")
+		with self.assertRaises(DuplicateLoginException, msg="cannot login again while still logged in"):
+			self.controller.login("user", "123456")
+
 
 		self.assertTrue(self.controller.logout(), "log out correctly")
 
-		self.assertTrue(self.controller.login("user", "blogging2025"), "can login again")
+		self.assertTrue(self.controller.login("user", "123456"), "can login again")
 
 		self.assertTrue(self.controller.logout(), "can log out again")
+
+		self.assertTrue(self.controller.login("ali", "@G00dPassw0rd"), "another user logging in")
+
+		self.assertTrue(self.controller.logout(), "can log out again")
+
 
 	def test_create_search_blog(self):
 		# some blogs that will be created
@@ -33,14 +53,15 @@ class ControllerTest(TestCase):
 		expected_blog_2 = Blog(1111115555, "Long Journey", "long_journey", "long.journey@gmail.com")
 		expected_blog_3 = Blog(1111112000, "Long Trip", "long_trip", "long.trip@gmail.com")
 
-		# cannot do operation without logging in
-		self.assertIsNone(self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com"), 
-			"cannot create blog without logging in")
+		# cannot do search and create operations without logging in
+		with self.assertRaises(IllegalAccessException, msg="cannot search blog without logging in"):
+			self.controller.search_blog(1111114444)
+		with self.assertRaises(IllegalAccessException, msg="cannot create blog without logging in"):
+			self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
 
 		# add one blog
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 		actual_blog = self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
-		
 		self.assertIsNotNone(actual_blog, "blog created cannot be null")
 
 		# implement __eq__(self, other) in Blog to compare blogs based on its attributes
@@ -52,8 +73,8 @@ class ControllerTest(TestCase):
 		self.assertEqual(expected_blog_1, actual_blog, "Short Journey blog was created, retrieved and its data are correct")
 
 		# should not allow to create another blog with same id
-		actual_blog = self.controller.create_blog(1111114444, "Long Journey", "long_journey", "long.journey@gmail.com")
-		self.assertIsNone(actual_blog, "cannot create blog with same id as from an existing blog")
+		with self.assertRaises(IllegalOperationException, msg="cannot add a blog with an ID that is already registered"):
+			self.controller.create_blog(1111114444, "Long Journey", "long_journey", "long.journey@gmail.com")
 
 		# add a second blog
 		actual_blog = self.controller.create_blog(1111115555, "Long Journey", "long_journey", "long.journey@gmail.com")
@@ -89,10 +110,11 @@ class ControllerTest(TestCase):
 		expected_blog_5 = Blog(1111117777, "Boring Blog", "boring_blog", "boring.blog@gmail.com")
 
 		# cannot do operation without logging in
-		self.assertIsNone(self.controller.retrieve_blogs("Short Journey"), "cannot retrieve blogs without logging in")
+		with self.assertRaises(IllegalAccessException, msg="cannot retrieve blogs without logging in"):
+			self.controller.retrieve_blogs("Short Journey")
 
 		# login and create some blogs
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 		self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
 		self.controller.create_blog(1111115555, "Long Journey", "long_journey", "long.journey@gmail.com")
 		self.controller.create_blog(1111112000, "Long Trip", "long_trip", "long.trip@gmail.com")
@@ -124,14 +146,15 @@ class ControllerTest(TestCase):
 		expected_blog_5 = Blog(1111117777, "Boring Blog", "boring_blog", "boring.blog@gmail.com")
 
 		# cannot do operation without logging in
-		self.assertFalse(self.controller.update_blog(1111114444, 1111114444, "Short Travel", "short_travel", "short.travel@gmail.com"), 
-			"cannot update blog without logging in")
+		with self.assertRaises(IllegalAccessException, msg="cannot update blog without logging in"):
+			self.controller.update_blog(1111114444, 1111114444, "Short Travel", "short_travel", "short.travel@gmail.com")
+
 		# login
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 
 		# try to update a blog when there are no blogs in the system
-		self.assertFalse(self.controller.update_blog(1111114444, 1111114444, "Short Travel", "short_travel", "short.travel@gmail.com"),
-			"cannot update blog when there are no blogs in the system")
+		with self.assertRaises(IllegalOperationException, msg="cannot update blog with an ID that is not registered"):
+			self.controller.update_blog(1111114444, 1111114444, "Short Travel", "short_travel", "short.travel@gmail.com")
 
 		# create some blogs
 		self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
@@ -157,8 +180,8 @@ class ControllerTest(TestCase):
 		self.assertEqual(expected_blog_5a, actual_blog, "blog was updated, its data have to be updated and correct")
 
 		# update one blog with a conflicting existing id
-		self.assertFalse(self.controller.update_blog(1111114444, 1111112000, "Short Travel", "short_travel", "short.travel@gmail.com"), 
-			"cannot update blog and give it a registered id")
+		with self.assertRaises(IllegalOperationException, msg="cannot update blog with an ID that is not registered"):
+			self.controller.update_blog(1111114444, 1111112000, "Short Travel", "short_travel", "short.travel@gmail.com")
 
 	def test_delete_blog(self):
 		# some blogs that may be deleted
@@ -169,13 +192,15 @@ class ControllerTest(TestCase):
 		expected_blog_5 = Blog(1111117777, "Boring Blog", "boring_blog", "boring.blog@gmail.com")
 
 		# cannot do operation without logging in
-		self.assertFalse(self.controller.delete_blog(1111114444), "cannot delete blog without logging in")
+		with self.assertRaises(IllegalAccessException, msg="cannot delete blog without logging in"):
+			self.controller.delete_blog(1111114444)
 
 		# login
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 
-		# try to delete a blog when there are no blogs in the system
-		self.assertFalse(self.controller.delete_blog(1111114444), "cannot delete blog when there are no blogs in the system")
+		# try to delete a blog when there are no registered blogs
+		with self.assertRaises(IllegalOperationException, msg="cannot delete blog when no blogs are registered"):
+			self.controller.delete_blog(1111114444)
 
 		# add some blogs
 		self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
@@ -183,6 +208,10 @@ class ControllerTest(TestCase):
 		self.controller.create_blog(1111112000, "Long Trip", "long_trip", "long.trip@gmail.com")
 		self.controller.create_blog(1111116666, "Short Trip", "short_trip", "short.trip@gmail.com")
 		self.controller.create_blog(1111117777, "Boring Blog", "boring_blog", "boring.blog@gmail.com")
+
+		# try to delete a blog with an ID that is not registered in the system
+		with self.assertRaises(IllegalOperationException, msg="cannot delete blog with an ID that is not registered"):
+			self.controller.delete_blog(1111118888)
 
 		# delete one blog at the start of the collection
 		self.assertTrue(self.controller.delete_blog(1111114444), "delete blog from the start of the collection")
@@ -205,10 +234,11 @@ class ControllerTest(TestCase):
 		expected_blog_5 = Blog(1111117777, "Boring Blog", "boring_blog", "boring.blog@gmail.com")
 
 		# cannot do operation without logging in
-		self.assertIsNone(self.controller.list_blogs(), "cannot list blogs without logging in")
+		with self.assertRaises(IllegalAccessException, msg="cannot list blogs without logging in"):
+			self.controller.list_blogs()
 
 		# login
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 
 		# listing blogs when there are no blogs in the system
 		blogs_list = self.controller.list_blogs()
@@ -257,11 +287,16 @@ class ControllerTest(TestCase):
 		expected_blog_4 = Blog(1111116666, "Short Trip", "short_trip", "short.trip@gmail.com")
 		expected_blog_5 = Blog(1111117777, "Boring Blog", "boring_blog", "boring.blog@gmail.com")
 
-		# cannot do operation without logging in
-		self.assertIsNone(self.controller.get_current_blog(), "cannot get current blog without logging in")
+		# cannot do operations without logging in
+		with self.assertRaises(IllegalAccessException, msg="cannot get current blog without logging in"):
+			self.controller.get_current_blog()
+		with self.assertRaises(IllegalAccessException, msg="cannot set current blog without logging in"):
+			self.controller.set_current_blog(1111110001)
+		with self.assertRaises(IllegalAccessException, msg="cannot unset current blog without logging in"):
+			self.controller.unset_current_blog()
 
 		# login
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 
 		# add some blogs
 		self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
@@ -274,8 +309,10 @@ class ControllerTest(TestCase):
 		self.assertIsNone(self.controller.get_current_blog(), "cannot get current blog without setting them first")
 
 		# cannot set a non-existent blog to be the current blog
-		self.controller.set_current_blog(1111110001)
-		self.assertIsNone(self.controller.get_current_blog(), "cannot get non-existent blog as current blog")
+		with self.assertRaises(IllegalOperationException, msg="cannot set non-existent blog as the current blog"):
+			self.controller.set_current_blog(1111110001)
+		# self.controller.set_current_blog(1111110001)
+		# self.assertIsNone(self.controller.get_current_blog(), "cannot get non-existent blog as current blog")
 
 		# set one blog to be the current blog
 		self.controller.set_current_blog(1111112000)
@@ -284,11 +321,12 @@ class ControllerTest(TestCase):
 		self.assertEqual(expected_blog_3, actual_current_blog, "expected current blog is blog 3")
 
 		# cannot delete the current blog, unset current blog first
-		self.assertFalse(self.controller.delete_blog(1111112000), "cannot delete the current blog")
+		with self.assertRaises(IllegalOperationException, msg="cannot delete the current blog"):
+			self.controller.delete_blog(1111112000)
 
 		# cannot update the current blog, unset current blog first
-		self.assertFalse(self.controller.update_blog(1111112000, 1111112000, "Short Travel", "short_travel", "short.travel@gmail.com"), 
-			"cannot update the current blog")
+		with self.assertRaises(IllegalOperationException, msg="cannot update the current blog"):
+			self.controller.update_blog(1111112000, 1111112000, "Short Travel", "short_travel", "short.travel@gmail.com")
 
 		# unset current blog
 		self.controller.unset_current_blog()
@@ -298,8 +336,10 @@ class ControllerTest(TestCase):
 		# handle log out
 		self.controller.set_current_blog(1111112000)
 		self.controller.logout()
-		actual_current_blog = self.controller.get_current_blog()
-		self.assertIsNone(actual_current_blog)
+
+		with self.assertRaises(IllegalAccessException, msg="cannot get current blog after logging out"):
+			self.controller.get_current_blog()
+
 
 	def test_create_post(self):
 		# some posts that may be created
@@ -307,14 +347,20 @@ class ControllerTest(TestCase):
 		expected_post_2 = Post(2, "Continuing my journey", "Along the way...\nThere were challenges.")
 		expected_post_3 = Post(3, "Finishing my journey", "And that was it.\nEnd of story.")
 
-		# cannot do operation without logging in
-		self.assertIsNone(self.controller.create_post("Starting my journey", "Once upon a time\nThere was a kid..."), "cannot add post without logging in")
+		# cannot do search and create operations without logging in
+		with self.assertRaises(IllegalAccessException, msg="cannot search post from a blog without logging in"):
+			self.controller.search_post(1)
+		with self.assertRaises(IllegalAccessException, msg="cannot add post in a blog without logging in"):
+			self.controller.create_post("Starting my journey", "Once upon a time\nThere was a kid...")
 
 		# login
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 
 		# cannot do operation without a valid current blog
-		self.assertIsNone(self.controller.create_post("Starting my journey", "Once upon a time\nThere was a kid..."), "cannot add post without a valid current blog")
+		with self.assertRaises(NoCurrentBlogException, msg="cannot search post without a valid current blog"):
+			self.controller.search_post(1)
+		with self.assertRaises(NoCurrentBlogException, msg="cannot add post without a valid current blog"):
+			self.controller.create_post("Starting my journey", "Once upon a time\nThere was a kid...")
 
 		# add one blog and make it the current blog
 		self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
@@ -369,13 +415,15 @@ class ControllerTest(TestCase):
 		expected_post_5 = Post(5, "Finishing my journey", "And that was it.\nEnd of story.")
 
 		# cannot do operation without logging in
-		self.assertIsNone(self.controller.retrieve_posts("journey"), "cannot retrieve posts without logging in")
+		with self.assertRaises(IllegalAccessException, msg="cannot retrieve posts from a blog without logging in"):
+			self.controller.retrieve_posts("journey")
 
 		# login
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 
 		# cannot do operation without a valid current blog
-		self.assertIsNone(self.controller.retrieve_posts("journey"), "cannot retrieve posts without a valid current blog")
+		with self.assertRaises(NoCurrentBlogException, msg="cannot retrieve posts without a valid current blogs"):
+			self.controller.retrieve_posts("journey")
 
 		# add one blog and make it the current blog
 		self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
@@ -414,15 +462,15 @@ class ControllerTest(TestCase):
 		expected_post_5 = Post(5, "Finishing my journey", "And that was it.\nEnd of story.")
 
 		# cannot do operation without logging in
-		self.assertFalse(self.controller.update_post(3, "Continuing the journey", "Along the way...\nThere were new challenges."), 
-			"cannot update posts without logging in")
+		with self.assertRaises(IllegalAccessException, msg="cannot update post from a blog without logging in"):
+			self.controller.update_post(3, "Continuing the journey", "Along the way...\nThere were new challenges.")
 
 		# login
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 
 		# cannot do operation without a valid current blog
-		self.assertFalse(self.controller.update_post(3, "Continuing the journey", "Along the way...\nThere were new challenges."), 
-			"cannot update posts without a valid current blog")
+		with self.assertRaises(NoCurrentBlogException, msg="cannot update post without a valid current blog"):
+			self.controller.update_post(3, "Continuing the journey", "Along the way...\nThere were new challenges.")
 
 		# add one blog and make it the current blog
 		self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
@@ -468,13 +516,15 @@ class ControllerTest(TestCase):
 		expected_post_5 = Post(5, "Finishing my journey", "And that was it.\nEnd of story.")
 
 		# cannot do operation without logging in
-		self.assertFalse(self.controller.delete_post(3), "cannot delete post without logging in")
+		with self.assertRaises(IllegalAccessException, msg="cannot delete post from a blog without logging in"):
+			self.controller.delete_post(3)
 
 		# login
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 
 		# cannot do operation without a valid current blog
-		self.assertFalse(self.controller.delete_post(3), "cannot delete post without a valid current blog")
+		with self.assertRaises(NoCurrentBlogException, msg="cannot delete post without a valid current blog"):
+			self.controller.delete_post(3)
 
 		# add one blog and make it the current blog
 		self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
@@ -513,13 +563,15 @@ class ControllerTest(TestCase):
 		expected_post_5 = Post(5, "Finishing my journey", "And that was it.\nEnd of story.")
 
 		# cannot do operation without logging in
-		self.assertIsNone(self.controller.list_posts(), "cannot list posts for a blog without logging in")
+		with self.assertRaises(IllegalAccessException, msg="cannot list post from a blog without logging in"):
+			self.controller.list_posts()
 
 		# login
-		self.assertTrue(self.controller.login("user", "blogging2025"), "login correctly")
+		self.assertTrue(self.controller.login("user", "123456"), "login correctly")
 
-		# listing posts when there are no blogs in the system
-		self.assertIsNone(self.controller.list_posts(), "cannot list posts when there are no blogs in the system")
+		# cannot do operation without a valid current blog
+		with self.assertRaises(NoCurrentBlogException, msg="cannot list posts without a valid current blog"):
+			self.controller.list_posts()
 
 		# add one blog and make it the current blog
 		self.controller.create_blog(1111114444, "Short Journey", "short_journey", "short.journey@gmail.com")
@@ -555,7 +607,7 @@ class ControllerTest(TestCase):
 		self.controller.delete_post(1)
 		self.controller.delete_post(5)
 
-		# listing posts for a blog with deleted posts
+		# listing posts from a blog with deleted posts
 		posts_list = self.controller.list_posts()
 		self.assertEqual(2, len(posts_list), "list of posts has size 2")
 		self.assertEqual(expected_post_4, posts_list[0], "post 4 is the first in the list of posts")
