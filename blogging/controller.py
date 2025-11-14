@@ -1,30 +1,39 @@
 from blogging.blog import Blog
 from blogging.post import Post
 from datetime import datetime
+import os
+from blogging.configuration import Configuration
+from blogging.exception.invalid_login_exception import InvalidLoginException
+from blogging.exception.duplicate_login_exception import DuplicateLoginException
+from blogging.exception.invalid_logout_exception import InvalidLogoutException
+from blogging.exception.illegal_access_exception import IllegalAccessException
+from blogging.exception.illegal_operation_exception import IllegalOperationException
+from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 class Controller:
     def __init__(self):
         self.blogs = []
         self.current_blog = None
         self.login_status = False
+        self.users_passwords = {"user":"8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", "ali":"6394ffec21517605c1b426d43e6fa7eb0cff606ded9c2956821c2c36bfee2810", "kala":"e5268ad137eec951a48a5e5da52558c7727aaa537c8b308b5e403e6b434e036e", "user":"123456", "ali":"@G00dPassw0rd"}
 
     # Checks if user is logged in and if not logs them in if they use the correct username and password
     def login(self, username, password) -> bool:
         if self.login_status:
-            return False
+            raise DuplicateLoginException()
         
         else:
-            if username == "user":
+            if username in self.users_passwords:
                 
-                if password == "blogging2025":
+                if password == self.users_passwords.get(username):
                     self.login_status = True
                     return True
 
                 else:
-                    return False
+                    raise InvalidLoginException()
 
             else:
-                return False
+                raise InvalidLoginException()
     
     # Logout the user if they are logged in
     def logout(self) -> bool:
@@ -33,18 +42,20 @@ class Controller:
             return True
         
         else:
-            return False
+            raise InvalidLogoutException()
 
     # ------BLOG METHODS--------
 
     # searches for a blog by id, if found, returns the blog, if not returns None
     def search_blog(self, id) -> Blog:
+        if self.login_status:
+            for b in self.blogs:
+                if id == b.id:
+                    return b
 
-        for b in self.blogs:
-            if id == b.id:
-                return b
-
-        return None
+            return None
+        else:
+            raise IllegalAccessException()
     
     # Creates a new blog if it does not already exist
     def create_blog(self, id, name, url, email) -> Blog:
@@ -58,9 +69,9 @@ class Controller:
                 return b
             
             else:
-                print("Blog already exists")
+                raise IllegalOperationException()
         else:
-            return None
+            raise IllegalAccessException()
         
     # Retrieves all blogs containing keyword
     def retrieve_blogs(self, keyword):
@@ -75,11 +86,11 @@ class Controller:
             return retrieved_blogs
         
         else:
-            return None
+            raise IllegalAccessException()
 
     # Update information about a blog, can change id if its not already in use
     def update_blog(self, id, new_id, new_name, new_url, new_email) -> bool:
-        update = False
+
         if self.login_status:  #check is logged in
             
             blog_for_update = self.search_blog(id)
@@ -94,49 +105,64 @@ class Controller:
                         blog_for_update.url = new_url
                         blog_for_update.email = new_email
                         
-                        update = True
+                        return True
                 
-                    elif self.search_blog(new_id) is None: #check if new_id is not in list 
+                    if self.search_blog(new_id) is None: #check if new_id is not in list 
                         
                         blog_for_update.id = new_id
                         blog_for_update.name = new_name
                         blog_for_update.url = new_url
                         blog_for_update.email = new_email
                         
-                        update = True
+                        return True
+
+                    else:
+                        raise IllegalOperationException()
+            
+                else: 
+                    raise IllegalOperationException()
+                
+            else:
+                raise IllegalOperationException()
         
-            return update
+        else:
+            raise IllegalAccessException()
                     
     # Removes a blog if it exists
     def delete_blog(self, id):
         # check if user is logged in and if there are blogs
-        if self.login_status and len(self.blogs) > 0:
+        if self.login_status:
+        
+            if len(self.blogs) > 0:
 
-            # check if blog exists
-            if self.search_blog(id) is not None:
-            
-                if self.current_blog is not None:
+                # check if blog exists
+                if self.search_blog(id) is not None:
+                
+                    if self.current_blog is not None:
 
-                    # check the blog is not the current blog
-                    if self.current_blog.id != id:
+                        # check the blog is not the current blog
+                        if self.current_blog.id != id:
+                            self.blogs.remove(self.search_blog(id))
+
+                            return True
+                        
+                        else:
+                            raise IllegalOperationException()
+                    
+                    else:
+
                         self.blogs.remove(self.search_blog(id))
 
                         return True
-                    
-                    else:
-                        return False
-                
+
                 else:
-
-                    self.blogs.remove(self.search_blog(id))
-
-                    return True
-
+                    raise IllegalOperationException()
+                
             else:
-                return False
+                raise IllegalOperationException()
         
         else:
-            return False
+            raise IllegalAccessException()
 
     # lists the current blogs
     def list_blogs(self):
@@ -146,7 +172,7 @@ class Controller:
         
         else:
 
-            return None
+            raise IllegalAccessException()
     
     # sets the current blog based on id
     def set_current_blog(self, id):
@@ -158,10 +184,10 @@ class Controller:
                 return self.current_blog
 
             else:
-                return None
+                raise IllegalOperationException()
 
         else:
-            return None
+            raise IllegalAccessException()
         
     # Returns the current blog
     def get_current_blog(self):
@@ -169,7 +195,7 @@ class Controller:
             return self.current_blog
         
         else:
-            return None
+            raise IllegalAccessException()
         
     # Sets current blog to None
     def unset_current_blog(self):
@@ -179,7 +205,7 @@ class Controller:
             return self.current_blog
         
         else:
-            return False
+            raise IllegalAccessException()
             
     # ------POST METHODS--------
         
@@ -196,7 +222,13 @@ class Controller:
                     if p.code == code:
                         post = p #get post to be returned 
 
-        return post
+                return post
+            
+            else:
+                raise NoCurrentBlogException()
+            
+        else:
+            raise IllegalAccessException()
         
     # Creates a new post if it doesn't already exist
     def create_post(self, title, text) -> Post:
@@ -208,7 +240,13 @@ class Controller:
 
                 post_created = self.current_blog.add_post(title, text)
         
-        return post_created 
+                return post_created 
+            
+            else:
+                raise NoCurrentBlogException()
+            
+        else:
+            raise IllegalAccessException()
         
     # Returns a list of posts that contain keyword
     def retrieve_posts(self, keyword): 
@@ -227,10 +265,10 @@ class Controller:
                 return posts_retrieved
             
             else: 
-                return None
+                raise NoCurrentBlogException()
 
         else: 
-            return None
+            raise IllegalAccessException()
     
     # Updates a post if it exists
     def update_post(self, code, title, text) -> Post: 
@@ -248,7 +286,13 @@ class Controller:
                     post.text = text
                     post.update = datetime.now()
                     
-        return post
+                    return post
+                
+            else:
+                raise NoCurrentBlogException()
+                
+        else:
+            raise IllegalAccessException()
 
     # Removes a post if it exists
     def delete_post(self, code) -> bool: 
@@ -265,7 +309,13 @@ class Controller:
                     self.current_blog.posts.remove(deleted_post)
                     deleted = True
         
-        return deleted
+                    return deleted
+                
+            else:
+                raise NoCurrentBlogException()
+            
+        else:
+            raise IllegalAccessException()
         
     # returns a list of all posts within a blog
     def list_posts(self): 
@@ -277,6 +327,10 @@ class Controller:
                 
                 posts_li = list(reversed(self.current_blog.posts))
                 
-        return posts_li
-        
-
+                return posts_li
+            
+            else:
+                raise NoCurrentBlogException()
+            
+        else:
+            raise IllegalAccessException()
