@@ -47,7 +47,16 @@ class Controller:
 
     # ------BLOG METHODS--------
 
-    
+    def search_blog(self, id):
+        
+        if self.login_status:
+            for b in self.blogs:
+                if id == b.id:
+                    return b
+
+            return None
+        else:
+            raise IllegalAccessException()
     
     # Creates a new blog if it does not already exist
     def create_blog(self, id, name, url, email) -> Blog:
@@ -209,13 +218,8 @@ class Controller:
 
             if self.current_blog is not None: 
 
-                for p in self.current_blog.posts: #locate post in list 
+                return self.current_blog.search_post(code)
 
-                    if p.code == code:
-                        post = p #get post to be returned 
-
-                return post
-            
             else:
                 raise NoCurrentBlogException()
             
@@ -230,9 +234,7 @@ class Controller:
 
             if self.current_blog is not None:     #make sure current_blog is valid
 
-                post_created = self.current_blog.add_post(title, text)
-        
-                return post_created 
+                return self.current_blog.create_post(title, text)
             
             else:
                 raise NoCurrentBlogException()
@@ -243,19 +245,10 @@ class Controller:
     # Returns a list of posts that contain keyword
     def retrieve_posts(self, keyword): 
         if self.login_status:                                           #check user is logged in
-
-            posts_retrieved = [] 
             
             if self.current_blog is not None:                           #check current blog
-
-                for p in self.current_blog.posts:                       #loop over posts in blog
-
-                    if ((keyword in p.title) or (keyword in p.text)):   #check keyword in text or title 
-
-                        posts_retrieved.append(p)                       #append post to list 
-
-                return posts_retrieved
-            
+                return self.current_blog.retrieve_posts(keyword)
+                
             else: 
                 raise NoCurrentBlogException()
 
@@ -264,21 +257,12 @@ class Controller:
     
     # Updates a post if it exists
     def update_post(self, code, title, text) -> Post: 
-        post = None
 
         if self.login_status:  
 
             if self.current_blog is not None:
             
-                post = self.search_post(code)
-                
-                if post is not None:
-
-                    post.title = title 
-                    post.text = text
-                    post.update = datetime.now()
-                    
-                    return post
+                return self.current_blog.update_posts(code, title, text)
                 
             else:
                 raise NoCurrentBlogException()
@@ -288,20 +272,12 @@ class Controller:
 
     # Removes a post if it exists
     def delete_post(self, code) -> bool: 
-        deleted = False
         
         if self.login_status: 
 
             if self.current_blog is not None:
                 
-                deleted_post = self.search_post(code)
-            
-                if deleted_post is not None: 
-
-                    self.current_blog.posts.remove(deleted_post)
-                    deleted = True
-        
-                    return deleted
+                return self.current_blog.delete_post(code)
                 
             else:
                 raise NoCurrentBlogException()
@@ -311,16 +287,12 @@ class Controller:
         
     # returns a list of all posts within a blog
     def list_posts(self): 
-        posts_li = None
-
+        
         if self.login_status:
 
             if self.current_blog is not None: 
-                
-                posts_li = list(reversed(self.current_blog.posts))
-                
-                return posts_li
-            
+                return self.current_blog.list_posts()
+           
             else:
                 raise NoCurrentBlogException()
             

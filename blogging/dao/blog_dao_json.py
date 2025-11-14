@@ -10,15 +10,7 @@ class BlogDAOJSON(ABC):
     # searches for a blog by id, if found, returns the blog, if not returns None
     @abstractmethod
     def search_blog(self, key):
-        
-        if self.login_status:
-            for b in self.blogs:
-                if id == b.id:
-                    return b
-
-            return None
-        else:
-            raise IllegalAccessException()
+        pass
         
     @abstractmethod
     def create_blog(self, blog):
