@@ -14,6 +14,7 @@ from blogging.dao.blog_dao_json import BlogDAOJSON
 class Controller:
     def __init__(self):
         self.blog_dao= BlogDAOJSON()
+        self.current_blog = None; 
         self.login_status = False
         self.users_passwords = {"user":"8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", "ali":"6394ffec21517605c1b426d43e6fa7eb0cff606ded9c2956821c2c36bfee2810", "kala":"e5268ad137eec951a48a5e5da52558c7727aaa537c8b308b5e403e6b434e036e", "user":"123456", "ali":"@G00dPassw0rd"}
 
@@ -79,9 +80,16 @@ class Controller:
     def update_blog(self, id, new_id, new_name, new_url, new_email) -> bool:
 
         if self.login_status:  #check is logged in
+            
             # check that the blog is not current blog
-            return self.blog_dao.update_blog(id, Blog(new_id, new_name, new_url, new_email))
-        
+            if self.current_blog is None or self.current_blog.id != id:
+                
+                updated_blog = Blog(new_id, new_name, new_url, new_email)
+                return self.blog_dao.update_blog(id, updated_blog)
+                
+            else: 
+                raise IllegalOperationException()
+                
         else:
             raise IllegalAccessException()
                     
@@ -89,15 +97,24 @@ class Controller:
     def delete_blog(self, id):
         # check if user is logged in and if there are blogs
         if self.login_status:
-
-                # check if blog exists
-                if self.search_blog(id) is not None:
+            
+            #check blog to be erased is in the list 
+            if self.search_blog(id) is not None:
                 
-                    return self.blog_dao.delete_blog(id)
-
-                else:
-                    raise IllegalOperationException()
-        
+                #check if blog to be erased is the current_blog
+                if self.current_blog is not None: 
+                    
+                    if self.current_blog.id != id:
+                        self.blog_dao.delete_blog(id)
+                        return True
+                            
+                    else:
+                        raise IllegalOperationException
+                else: 
+                    self.blog_dao.delete_blog(id)
+                    return True
+            else:
+                raise IllegalOperationException()
         else:
             raise IllegalAccessException()
 
@@ -113,12 +130,12 @@ class Controller:
     
     # sets the current blog based on id
     def set_current_blog(self, id):
-        if self.login_status and len(self.blogs) > 0:
+        if self.login_status:
 
             if self.search_blog(id) is not None:
-                self.blog_dao.current_blog = self.search_blog(id)
+                self.current_blog = self.search_blog(id)
 
-                return self.blog_dao.current_blog
+                return self.current_blog
 
             else:
                 raise IllegalOperationException()
@@ -198,7 +215,7 @@ class Controller:
 
             if self.current_blog is not None:
             
-                return self.current_blog.update_posts(code, title, text)
+                return self.current_blog.update_post(code, title, text)
                 
             else:
                 raise NoCurrentBlogException()
