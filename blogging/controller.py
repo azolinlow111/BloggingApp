@@ -1,6 +1,7 @@
 from blogging.blog import Blog
 from blogging.post import Post
 from datetime import datetime
+import hashlib
 import os
 from blogging.configuration import Configuration
 from blogging.exception.invalid_login_exception import InvalidLoginException
@@ -14,10 +15,27 @@ from blogging.dao.blog_dao_json import BlogDAOJSON
 class Controller:
     def __init__(self):
         self.blog_dao= BlogDAOJSON()
-        self.current_blog = None; 
+        self.current_blog = None 
         self.login_status = False
-        self.users_passwords = {"user":"8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", "ali":"6394ffec21517605c1b426d43e6fa7eb0cff606ded9c2956821c2c36bfee2810", "kala":"e5268ad137eec951a48a5e5da52558c7727aaa537c8b308b5e403e6b434e036e", "user":"123456", "ali":"@G00dPassw0rd"}
-
+        #self.users_passwords = {"user":"8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", "ali":"6394ffec21517605c1b426d43e6fa7eb0cff606ded9c2956821c2c36bfee2810", "kala":"e5268ad137eec951a48a5e5da52558c7727aaa537c8b308b5e403e6b434e036e", "user":"123456", "ali":"@G00dPassw0rd"}
+        self.users_passwords = {}
+        self.autosave = Configuration.autosave
+        
+        with open('blogging/users.txt', 'r') as file: 
+            for line in file: 
+                line = line.strip()
+                username, password = line.split(',')
+                    
+                self.users_passwords[username] = password
+        
+    
+    def get_password_hash(self, password):
+        # Learn a bit about password hashes by reading this code
+        encoded_password = password.encode('utf-8')     # Convert the password to bytes
+        hash_object = hashlib.sha256(encoded_password)      # Choose a hashing algorithm (e.g., SHA-256)
+        hex_dig = hash_object.hexdigest()       # Get the hexadecimal digest of the hashed password
+        return hex_dig
+    
     # Checks if user is logged in and if not logs them in if they use the correct username and password
     def login(self, username, password) -> bool:
         if self.login_status:
@@ -26,7 +44,7 @@ class Controller:
         else:
             if username in self.users_passwords:
                 
-                if password == self.users_passwords.get(username):
+                if self.get_password_hash(password) == self.users_passwords.get(username):
                     self.login_status = True
                     return True
 
