@@ -2,17 +2,28 @@ from blogging.dao.post_dao import PostDAO
 from blogging.post import Post
 import datetime
 from blogging.dao.blog_dao_json import BlogDAOJSON
-from blogging.exception.invalid_login_exception import InvalidLoginException
-from blogging.exception.duplicate_login_exception import DuplicateLoginException
-from blogging.exception.invalid_logout_exception import InvalidLogoutException
-from blogging.exception.illegal_access_exception import IllegalAccessException
-from blogging.exception.illegal_operation_exception import IllegalOperationException
-from blogging.exception.no_current_blog_exception import NoCurrentBlogException
+from blogging.configuration import Configuration
+from pickle import dump, load, UnpicklingError
 
 class PostDAOPickle(PostDAO):
     def __init__(self, blog):
         self.blog = blog
         self.posts = []
+        self.autosave = Configuration.autosave
+        
+        if self.autosave: 
+            self.posts_file = str(self.blog.id) + Configuration.records_extension
+            
+            try:
+                with open(self.posts_file, 'rb') as file:
+                    self.posts = load(file)  # load the entire list at once
+                    self.blog.post_counter = len(self.posts)
+                    
+            except (FileNotFoundError, EOFError, UnpicklingError):
+                with open(self.posts_file, 'wb'):
+                    pass
+
+
   
     def search_post(self, key):
         for p in self.posts: #locate post in list 
@@ -25,6 +36,9 @@ class PostDAOPickle(PostDAO):
     
     def create_post(self, post):
         self.posts.append(post)
+        
+        with open(self.posts_file, 'wb') as file:
+            dump(self.posts, file)
         return post
         
     def retrieve_posts(self, search_string):
