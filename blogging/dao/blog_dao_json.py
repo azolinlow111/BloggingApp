@@ -55,35 +55,6 @@ class BlogDAOJSON(BlogDAO):
     def update_blog(self, id, blog):
         blog_for_update = self.search_blog(id)
 
-        if self.autosave:
-            with open(self.blog_file, 'r') as file:
-                self.blogs = json.load(file, cls=BlogDecoder)
-                
-                if self.search_blog(id) is not None:
-                    if blog.id == id:
-                        blog_for_update.name = blog.name
-                        blog_for_update.url = blog.url
-                        blog_for_update.email = blog.email
-
-                        json.dump(self.blogs, file, cls=BlogEncoder)
-                        return True
-                
-                    if self.search_blog(blog.id) is None: #check if new_id is not in list 
-                    
-                        blog_for_update.id = blog.id
-                        blog_for_update.name = blog.name
-                        blog_for_update.url = blog.url
-                        blog_for_update.email = blog.email
-                        
-                        json.dump(self.blogs, file, cls=BlogEncoder)
-                        return True 
-                    
-                    else:
-                        raise IllegalOperationException()
-
-                else: 
-                    raise IllegalOperationException()
-
         #check that blog is in the list 
         if blog_for_update is not None: 
             
@@ -92,6 +63,11 @@ class BlogDAOJSON(BlogDAO):
                 blog_for_update.url = blog.url
                 blog_for_update.email = blog.email
                 
+                #update json file 
+                if self.autosave:
+                    with open(self.blog_file, 'w') as file:
+                        json.dump(self.blogs, file, cls=BlogEncoder)
+
                 return True
                 
             if self.search_blog(blog.id) is None: #check if new_id is not in list 
@@ -101,6 +77,11 @@ class BlogDAOJSON(BlogDAO):
                 blog_for_update.url = blog.url
                 blog_for_update.email = blog.email
                 
+                #update json file 
+                if self.autosave:
+                    with open(self.blog_file, 'w') as file:
+                        json.dump(self.blogs, file, cls=BlogEncoder)
+               
                 return True 
             
             else: 
