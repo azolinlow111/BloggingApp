@@ -93,6 +93,12 @@ class BlogDAOJSON(BlogDAO):
 
     def delete_blog(self, id):
         self.blogs.remove(self.search_blog(id))
+        
+        #update json file 
+        if self.autosave:
+            with open(self.blog_file, 'w') as file:
+                json.dump(self.blogs, file, cls=BlogEncoder)
+               
 
     def list_blogs(self):
         return self.blogs
