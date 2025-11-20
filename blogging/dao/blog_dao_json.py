@@ -20,47 +20,30 @@ class BlogDAOJSON(BlogDAO):
             self.blog_file = Configuration.blogs_file
             try:
                 with open(self.blog_file, 'r') as file:
-                    pass
+                   self.blogs = json.load(file, cls=BlogDecoder)
 
-            except:
+            except (FileNotFoundError, json.JSONDecodeError):
                 with open(self.blog_file, 'w') as file:
                     json.dump([], file)
 
-                
-               
-        
-    # searches for a blog by id, if found, returns the blog, if not returns None
-    def search_blog(self, id): 
-        if self.autosave:
-            with open(self.blog_file, 'r') as file:
-                blogs = json.load(file, cls=BlogDecoder)
-                for b in blogs:
-                    if id == b.id:
-                        return b
+ 
 
-        else:
-            for b in self.blogs:
-                    if id == b.id:
-                        return b
+ 
+    # searches for a blog by id, if found, returns the blog, if not returns None
+    def search_blog(self, id):
+        for b in self.blogs:
+            if id == b.id:
+                return b
 
         return None     
 
     def create_blog(self, blog):
-
+        self.blogs.append(blog)
+        
         if self.autosave:
-            with open(self.blog_file, 'r') as file:
-                self.blogs = json.load(file, cls=BlogDecoder)
-                if self.search_blog(id) is None:
-                    return None
-                
-            self.blogs.append(blog)
-
             with open(self.blog_file, 'w') as file:
                 json.dump(self.blogs, file, cls=BlogEncoder)
-
-        else:
-            self.blogs.append(blog)
-
+        
         return blog
 
     def retrieve_blogs(self, keyword):
