@@ -25,9 +25,6 @@ class BlogDAOJSON(BlogDAO):
             except (FileNotFoundError, json.JSONDecodeError):
                 with open(self.blog_file, 'w') as file:
                     json.dump([], file)
-
- 
-
  
     # searches for a blog by id, if found, returns the blog, if not returns None
     def search_blog(self, id):
@@ -48,18 +45,10 @@ class BlogDAOJSON(BlogDAO):
 
     def retrieve_blogs(self, keyword):
         retrieved_blogs = []
-
-        if self.autosave:
-            with open(self.blog_file, 'r') as file:
-                blogs = json.load(file, cls=BlogDecoder)
-                for b in blogs:
-                    if keyword in b.name:
-                        retrieved_blogs.append(b)
-
-        else:
-            for b in self.blogs:
-                if keyword in b.name:
-                    retrieved_blogs.append(b)
+        
+        for b in self.blogs:
+            if keyword in b.name:
+                retrieved_blogs.append(b)
 
         return retrieved_blogs
 
