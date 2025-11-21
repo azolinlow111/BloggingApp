@@ -1,7 +1,5 @@
-from datetime import datetime
-
 class Post:
-
+    # initialize the Post class
     def __init__(self, code, title, text, creation = None, update = None):
         self.code = code
         self.title = title
