@@ -12,7 +12,7 @@ class PostDAOPickle(PostDAO):
         self.autosave = Configuration.autosave
         
         if self.autosave: 
-            self.posts_file = str(self.blog.id) + Configuration.records_extension
+            self.posts_file = Configuration.records_path + "/" + str(self.blog.id) + Configuration.records_extension
             
             try:
                 with open(self.posts_file, 'rb') as file:
@@ -20,7 +20,7 @@ class PostDAOPickle(PostDAO):
                     self.blog.post_counter = len(self.posts)
                     
             except (FileNotFoundError, EOFError, UnpicklingError):
-                with open(self.posts_file, 'wb'):
+                with open(self.posts_file, 'wb') as file:
                     pass
 
 
