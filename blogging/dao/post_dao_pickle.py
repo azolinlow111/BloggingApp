@@ -37,8 +37,9 @@ class PostDAOPickle(PostDAO):
     def create_post(self, post):
         self.posts.append(post)
         
-        with open(self.posts_file, 'wb') as file:
-            dump(self.posts, file)
+        if self.autosave: 
+            with open(self.posts_file, 'wb') as file:
+                dump(self.posts, file)
         return post
         
     def retrieve_posts(self, search_string):
@@ -54,13 +55,17 @@ class PostDAOPickle(PostDAO):
     
     def update_post(self, key, new_title, new_text):
         post = self.search_post(key)
-                
+    
         if post is not None:
 
             post.title = new_title 
             post.text = new_text
             post.update = datetime.datetime.now()
-                    
+        
+            if self.autosave:
+                with open(self.posts_file, 'wb') as file: 
+                    dump(self.posts, file)
+            
             return post
     
     def delete_post(self, key):
@@ -70,6 +75,10 @@ class PostDAOPickle(PostDAO):
 
             self.posts.remove(deleted_post)
             
+            if self.autosave:
+                with open(self.posts_file, 'wb') as file: 
+                    dump(self.posts, file)
+                    
             return True
     
     def list_posts(self):

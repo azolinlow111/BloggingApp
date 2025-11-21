@@ -21,7 +21,7 @@ class IntegrationTest(TestCase):
 		self.controller = Controller()
 
 	# comment the tearDown method to see the file when the test ends.
-	'''def tearDown(self):
+	def tearDown(self):
 		blogs_file = self.configuration.__class__.blogs_file
 		records_path = self.configuration.__class__.records_path
 		blogs_file_exists = os.path.exists(blogs_file)
@@ -36,7 +36,7 @@ class IntegrationTest(TestCase):
 		# removing the blogs file later to avoid concurrency issues
 		if blogs_file_exists:
 			os.remove(blogs_file)
-'''
+
 	def reset_persistence(self):
 		self.controller = Controller()
 		self.controller.login("user", "123456")       
