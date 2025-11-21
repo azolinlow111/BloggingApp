@@ -1,16 +1,16 @@
 from blogging.dao.post_dao import PostDAO
-from blogging.post import Post
 import datetime
-from blogging.dao.blog_dao_json import BlogDAOJSON
 from blogging.configuration import Configuration
 from pickle import dump, load, UnpicklingError
 
 class PostDAOPickle(PostDAO):
+    # initialize PostDAOPickle class
     def __init__(self, blog):
         self.blog = blog
         self.posts = []
         self.autosave = Configuration.autosave
         
+        # if using persistence, create files for blogs based on id
         if self.autosave: 
             self.posts_file = Configuration.records_path + "/" + str(self.blog.id) + Configuration.records_extension
             
@@ -23,8 +23,7 @@ class PostDAOPickle(PostDAO):
                 with open(self.posts_file, 'wb') as file:
                     pass
 
-
-  
+    # search through posts based on key 
     def search_post(self, key):
         for p in self.posts: #locate post in list 
 
@@ -33,7 +32,7 @@ class PostDAOPickle(PostDAO):
             
         return None
     
-    
+    # create a new post, if using persistence add it to the relevant .dat file
     def create_post(self, post):
         self.posts.append(post)
         
@@ -42,6 +41,7 @@ class PostDAOPickle(PostDAO):
                 dump(self.posts, file)
         return post
         
+    # retrieve the posts with the given search string
     def retrieve_posts(self, search_string):
         posts_retrieved = [] 
 
@@ -53,6 +53,7 @@ class PostDAOPickle(PostDAO):
 
         return posts_retrieved
     
+    # update a post, if using persistence update the relevant .dat file too
     def update_post(self, key, new_title, new_text):
         post = self.search_post(key)
     
@@ -68,6 +69,7 @@ class PostDAOPickle(PostDAO):
             
             return post
     
+    # delete a post based on key, if using persistence delete it from the .dat file too
     def delete_post(self, key):
         deleted_post = self.search_post(key)
             
@@ -81,5 +83,6 @@ class PostDAOPickle(PostDAO):
                     
             return True
     
+    # return a list of all posts in a blog
     def list_posts(self):
         return list(reversed(self.posts))

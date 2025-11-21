@@ -1,21 +1,17 @@
 import json
-from abc import ABC, abstractmethod
 from blogging.dao.blog_dao import BlogDAO
-from blogging.exception.invalid_login_exception import InvalidLoginException
-from blogging.exception.duplicate_login_exception import DuplicateLoginException
-from blogging.exception.invalid_logout_exception import InvalidLogoutException
-from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
-from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 from blogging.configuration import Configuration
 from blogging.dao.blog_encoder import BlogEncoder
 from blogging.dao.blog_decoder import BlogDecoder
 
 class BlogDAOJSON(BlogDAO):
+    # initialize BlogDAOJSON class
     def __init__(self):
         self.blogs = []
         self.autosave = Configuration.autosave
 
+        # if using persistence create blog.json file
         if self.autosave:
             self.blog_file = Configuration.blogs_file
             try:
@@ -34,6 +30,7 @@ class BlogDAOJSON(BlogDAO):
 
         return None     
 
+    # create a new blog, if using persistence save it to blog.json
     def create_blog(self, blog):
         self.blogs.append(blog)
         
@@ -43,6 +40,7 @@ class BlogDAOJSON(BlogDAO):
         
         return blog
 
+    # retrieve blogs by keyword, return list of blogs
     def retrieve_blogs(self, keyword):
         retrieved_blogs = []
         
@@ -52,6 +50,7 @@ class BlogDAOJSON(BlogDAO):
 
         return retrieved_blogs
 
+    # update a blog in the blogs list, if using persistence update the blog.json file too
     def update_blog(self, id, blog):
         blog_for_update = self.search_blog(id)
 
@@ -90,7 +89,7 @@ class BlogDAOJSON(BlogDAO):
         else: 
             raise IllegalOperationException()
         
-
+    # delete a blog based on id, if using persistence remove from blog.json file too
     def delete_blog(self, id):
         self.blogs.remove(self.search_blog(id))
         
@@ -99,6 +98,6 @@ class BlogDAOJSON(BlogDAO):
             with open(self.blog_file, 'w') as file:
                 json.dump(self.blogs, file, cls=BlogEncoder)
                
-
+    # returns a list of all blogs
     def list_blogs(self):
         return self.blogs

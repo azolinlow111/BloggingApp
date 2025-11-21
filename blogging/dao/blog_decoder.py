@@ -1,6 +1,6 @@
 from json import JSONDecoder
 
-
+# converts json object into a Blog object
 class BlogDecoder(JSONDecoder): 
     def __init__(self, *args, **kwargs): 
         super().__init__(object_hook=self.object_hook, *args, **kwargs)
