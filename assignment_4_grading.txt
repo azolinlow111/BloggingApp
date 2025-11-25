@@ -1,0 +1,106 @@
+Assignment 4 Grading:
+---------------------
+Student Group "group028" (Aislinn Low & Valeria Gomez)
+Grade: 98/100, 98%
+
+Python test results:
+------------------------
+
+Results for controller_test.py:
+
+test_create_post (tests.controller_test.ControllerTest) ... ok
+test_create_search_blog (tests.controller_test.ControllerTest) ... ok
+test_delete_blog (tests.controller_test.ControllerTest) ... ok
+test_delete_post (tests.controller_test.ControllerTest) ... ok
+test_list_blogs (tests.controller_test.ControllerTest) ... ok
+test_list_posts (tests.controller_test.ControllerTest) ... ok
+test_login_logout (tests.controller_test.ControllerTest) ... ok
+test_retrieve_blogs (tests.controller_test.ControllerTest) ... ok
+test_retrieve_posts (tests.controller_test.ControllerTest) ... ok
+test_set_get_current_blog (tests.controller_test.ControllerTest) ... ok
+test_update_blog (tests.controller_test.ControllerTest) ... ok
+test_update_post (tests.controller_test.ControllerTest) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.002s
+
+OK
+
+Results for integration_test.py:
+
+test_create_post (tests.integration_test.IntegrationTest) ... ok
+test_create_search_blog (tests.integration_test.IntegrationTest) ... ok
+test_delete_blog (tests.integration_test.IntegrationTest) ... ok
+test_delete_post (tests.integration_test.IntegrationTest) ... ok
+test_list_blogs (tests.integration_test.IntegrationTest) ... ok
+test_list_posts (tests.integration_test.IntegrationTest) ... ok
+test_login_logout (tests.integration_test.IntegrationTest) ... ok
+test_retrieve_blogs (tests.integration_test.IntegrationTest) ... ok
+test_retrieve_posts (tests.integration_test.IntegrationTest) ... ok
+test_set_get_current_blog (tests.integration_test.IntegrationTest) ... ok
+test_update_blog (tests.integration_test.IntegrationTest) ... ok
+test_update_post (tests.integration_test.IntegrationTest) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 1.009s
+
+OK
+
+
+Summary:
+Passed tests: 24
+Failed tests: 0
+
+Controller tests: 24/24 points.
+Integration tests: 48/48 points.
+
+Version Control (git log):
+--------------------------
+5866cef	Valeria Gomez	Thu Nov 20 18:22:42 2025 -0800	final A4
+1a314b2	Aislinn Low	Thu Nov 20 18:14:06 2025 -0800	Merge branch 'main' of https://gitlab.csc.uvic.ca/courses/2025091/SENG265_COSI/teams/group028
+d9151a6	Aislinn Low	Thu Nov 20 18:11:56 2025 -0800	final commit
+b9cf4e0	Valeria Gomez Lopez	Fri Nov 21 02:09:57 2025 +0000	Merge branch 'A4' into 'main'
+3dad95a	Aislinn Low	Thu Nov 20 18:03:21 2025 -0800	added comments
+0764676	Valeria Gomez	Thu Nov 20 17:41:41 2025 -0800	implemented postDAOPICKLE functions
+192cebb	Valeria Gomez	Thu Nov 20 17:29:47 2025 -0800	fixed pickle constructor
+d6db5d7	Valeria Gomez	Thu Nov 20 02:43:07 2025 -0800	implemented create postDAOPickle function
+474d04a	Valeria Gomez	Thu Nov 20 01:32:57 2025 -0800	added autosave functionality to delete_blog function ini blogDAOJSON
+026b56b	Valeria Gomez	Thu Nov 20 01:30:52 2025 -0800	fixed update function in BlogDAOJSON
+f1742ad	Valeria Gomez	Thu Nov 20 01:25:59 2025 -0800	fixed retrieve blogDAOJSON function
+2192e3d	Valeria Gomez	Thu Nov 20 01:24:14 2025 -0800	fixed blogDAOJSON search-create functions
+87a9e51	Aislinn Low	Wed Nov 19 18:48:40 2025 -0800	Added some JSON functionality
+3903e7f	Valeria Gomez	Sun Nov 16 17:56:40 2025 -0800	finished decoder
+f19d269	Valeria Gomez	Sun Nov 16 17:52:55 2025 -0800	user.txt implementation and blog decoder/encoder
+5c7e1a3	Valeria Gomez	Sat Nov 15 14:55:58 2025 -0800	Changed current_blog location, fixed some blog_json methods, implemented post_dao_pickle
+a16ac3d	Aislinn Low	Thu Nov 13 18:51:30 2025 -0800	DAO Functionality added, code has errors
+16fee9e	Aislinn Low	Thu Nov 13 18:09:37 2025 -0800	Refactored code for A4
+757e844	Aislinn Low	Thu Nov 13 17:36:43 2025 -0800	Push for refactoring
+1166a5e	Aislinn Low	Thu Nov 13 17:10:27 2025 -0800	Added exception handing, code runs
+61b3a55	Aislinn Low	Thu Nov 13 16:36:05 2025 -0800	Added controller test file
+80021b6	Jonah Carroll Dullaert	Thu Nov 13 11:20:19 2025 -0800	Assignment 3 feedback. Send me an email if you have any questions.
+648aa5f	Aislinn Low	Sat Nov 8 10:51:44 2025 -0800	Added files necessary for a4
+73b17c1	Aislinn Low	Fri Nov 7 15:24:01 2025 -0800	Added separate blog and post test files
+2ce8d57	Aislinn Low	Fri Nov 7 15:09:43 2025 -0800	Added more tests and final comments
+666f9c6	Aislinn Low	Thu Nov 6 11:21:41 2025 -0800	Added comments
+4d0d301	Aislinn Low	Thu Nov 6 10:59:48 2025 -0800	Added our own tests
+065306c	Valeria Gomez	Fri Oct 31 19:15:09 2025 -0700	fixed issue with posts functions
+b0a71e7	Valeria Gomez	Fri Oct 31 01:59:40 2025 -0700	implemented list_posts() method
+1366e06	Valeria Gomez	Fri Oct 31 01:00:03 2025 -0700	inplemented delete_post()
+e212e47	Valeria Gomez	Fri Oct 31 00:52:03 2025 -0700	inplemented update_post()
+387f338	Valeria Gomez	Fri Oct 31 00:25:05 2025 -0700	added retrieve_posts functionality
+ab2cedf	Valeria Gomez	Fri Oct 31 00:01:17 2025 -0700	create and search post methods implemented
+548580b	Aislinn Low	Thu Oct 30 12:56:57 2025 -0700	Code not finished
+2f16a79	Aislinn Low	Thu Oct 30 12:37:56 2025 -0700	Added current blog functionality
+bd2a6a1	Aislinn Low	Thu Oct 30 12:24:30 2025 -0700	Added update blog, delete blogs, list blogs
+8bb3508	Aislinn Low	Thu Oct 30 11:11:30 2025 -0700	Added create blog and search blog functionality
+7435595	Aislinn Low	Thu Oct 30 10:50:37 2025 -0700	Added login logout functionality
+5a86c50	Aislinn Low	Sun Oct 26 16:19:57 2025 -0700	Added controller and blog functions/classes
+6d28656	Aislinn Low	Sun Oct 26 15:57:28 2025 -0700	Added Post class and functions
+81dba9f	Aislinn Low	Sun Oct 26 15:04:07 2025 -0700	Added necessary files for classes
+959d076	Roberto Bittencourt	Tue Oct 21 14:14:13 2025 -0700	Added controller tests and configuration files
+c025491	Roberto Bittencourt	Tue Oct 21 21:08:52 2025 +0000	Initial commit
+
+Solid commit log, detailing your collaborative progress. 8/8 points.
+
+Modularization: 10/10 points.
+Documentation: 8/10 points. Some sections of intricate code could do with more (purposeful and plentiful) comments.
