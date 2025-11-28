@@ -83,7 +83,7 @@ class EditingBlogMenuCLI():
 
     # helper method to print post data
     def print_post_data(self, post):
-        print('Post #%d, created - %s, changed - %s' % (post.code, post.creation_time, post.update_time))
+        print('Post #%d, created - %s, changed - %s' % (post.code, post.creation, post.update))
         print('\nTitle: %s\n' % post.title)
         print('%s\n' % post.text)
 
