@@ -4,6 +4,9 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QMainWindow, QGridLayout, QPushButton, QWidget, QLabel, QLineEdit, QMessageBox
 from blogging.controller import Controller 
 
+from blogging.exception.invalid_login_exception import InvalidLoginException
+from blogging.exception.duplicate_login_exception import DuplicateLoginException
+
 class BloggingGUI(QMainWindow):
 
     def __init__(self):
@@ -51,9 +54,11 @@ class BloggingGUI(QMainWindow):
         username = self.username_text.text()
         password = self.password_text.text()
         
-        if self.controller.login(username, password): 
-            QMessageBox.information(self, "login", "login correctly")
-        else: 
+        try: 
+            success = self.controller.login(username, password)
+            if success: 
+                QMessageBox.information(self, "login", "login correctly")
+        except (InvalidLoginException, DuplicateLoginException): 
             QMessageBox.warning(self, "login error", "not login correctly")
 def main():
     app = QApplication(sys.argv)
