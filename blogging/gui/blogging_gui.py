@@ -6,6 +6,8 @@ from blogging.controller import Controller
 
 from blogging.exception.invalid_login_exception import InvalidLoginException
 from blogging.exception.duplicate_login_exception import DuplicateLoginException
+from blogging.exception.illegal_operation_exception import IllegalOperationException
+from blogging.exception.illegal_access_exception import IllegalAccessException
 
 class BloggingGUI(QMainWindow):
 
@@ -15,8 +17,10 @@ class BloggingGUI(QMainWindow):
         self.configuration = Configuration()
         self.configuration.__class__.autosave = True
         self.controller = Controller()
-        
+
         self.setWindowTitle("Blogging System")
+
+        self.go_back_btn = QPushButton("Go Back to Main Menu")
         
         login_layout = QGridLayout()
         
@@ -70,21 +74,28 @@ class BloggingGUI(QMainWindow):
         # creating blogs
         self.create_blog_layout = QGridLayout()
         
-        #setting variables for login
         self.id_label = QLabel("ID")
         self.name_label = QLabel("Name")
-        self.url_label = QLabel("ID")
-        self.email_label = QLabel("Name")
-        self.username_text = QLineEdit()
-        self.password_text = QLineEdit()
+        self.url_label = QLabel("URL")
+        self.email_label = QLabel("Email")
+        self.id_text = QLineEdit()
+        self.name_text = QLineEdit()
+        self.url_text = QLineEdit()
+        self.email_text = QLineEdit()
+        self.create_new_blog_btn = QPushButton("Create")
         
-        #add to login_layout
-        login_layout.addWidget(self.username_label, 0,0)
-        login_layout.addWidget(self.username_text, 0,1)
-        login_layout.addWidget(self.password_label , 1, 0)
-        login_layout.addWidget(self.password_text, 1,1)
-        login_layout.addWidget(self.login_btn, 2,1)
-        login_layout.addWidget(self.quit_btn, 2, 0)
+        self.create_blog_layout.addWidget(self.id_label, 0,0)
+        self.create_blog_layout.addWidget(self.id_text, 0,1)
+        self.create_blog_layout.addWidget(self.name_label, 1,0)
+        self.create_blog_layout.addWidget(self.name_text, 1,1)
+        self.create_blog_layout.addWidget(self.url_label, 2,0)
+        self.create_blog_layout.addWidget(self.url_text, 2,1)
+        self.create_blog_layout.addWidget(self.email_label, 3,0)
+        self.create_blog_layout.addWidget(self.email_text, 3,1)
+        self.create_blog_layout.addWidget(self.go_back_btn, 4,0)
+        self.create_blog_layout.addWidget(self.create_new_blog_btn, 4, 1)
+
+
 
         # set widgets
         self.login_widget = QWidget()
@@ -96,19 +107,28 @@ class BloggingGUI(QMainWindow):
         self.list_blogs_widget = QWidget()
         self.list_blogs_widget.setLayout(self.list_blogs_layout)
 
+        self.create_blog_widget = QWidget()
+        self.create_blog_widget.setLayout(self.create_blog_layout)
+
         self.stack = QStackedWidget()
         self.stack.addWidget(self.login_widget) # 0
         self.stack.addWidget(self.main_widget) # 1
         self.stack.addWidget(self.list_blogs_widget) # 2
+        self.stack.addWidget(self.create_blog_widget) # 3
         self.setCentralWidget(self.stack)
 
         self.quit_btn.clicked.connect(self.quit_btn_clicked)
         self.login_btn.clicked.connect(self.login_btn_clicked)
         self.logout_btn.clicked.connect(self.logout_btn_clicked)
         self.list_all_blogs_btn.clicked.connect(self.list_all_blogs_btn_clicked)
-        
+        self.go_back_btn.clicked.connect(self.go_back_btn_clicked)
+        self.create_blog_btn.clicked.connect(self.create_blog_btn_clicked)
+
         #self.setCentralWidget(self.login_widget)
         self.stack.setCurrentIndex(0)
+
+    def go_back_btn_clicked(self):
+        self.stack.setCurrentIndex(1)
     
     def quit_btn_clicked(self): 
         self.close()
@@ -116,7 +136,32 @@ class BloggingGUI(QMainWindow):
     def clear_login(self):
         self.username_text.setText("")
         self.password_text.setText("")
+
+    def create_blog_btn_clicked(self):
+        self.stack.setCurrentIndex(3)
+        self.create_new_blog_btn.clicked.connect(self.create_new_blog_btn_clicked)
     
+    def create_new_blog_btn_clicked(self):
+        id = self.id_text.text()
+        name = self.name_text.text()
+        url = self.url_text.text()
+        email = self.email_text.text()
+
+        try: 
+            if self.controller.create_blog(id, name, url, email): 
+                QMessageBox.information(self, "Success", "Blog Created Successfully!")
+                self.id_text.setText("")
+                self.name_text.setText("")
+                self.url_text.setText("")
+                self.email_text.setText("")
+
+        except (IllegalAccessException, IllegalOperationException): 
+            QMessageBox.warning(self, "Error", "Blog Cannot Have the Same ID as Another Blog.")
+            self.id_text.setText("")
+            self.name_text.setText("")
+            self.url_text.setText("")
+            self.email_text.setText("")
+
     def login_btn_clicked(self): 
         username = self.username_text.text()
         password = self.password_text.text()
