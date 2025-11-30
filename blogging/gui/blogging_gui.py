@@ -95,7 +95,20 @@ class BloggingGUI(QMainWindow):
         self.create_blog_layout.addWidget(self.go_back_btn, 4,0)
         self.create_blog_layout.addWidget(self.create_new_blog_btn, 4, 1)
 
+        # search blog
+        self.search_blog_layout = QGridLayout()
 
+        self.search_label = QLabel("Enter A ID")
+        self.search_text = QLineEdit()
+        self.search_b_btn = QPushButton("Search")
+        self.search_results = QPlainTextEdit()
+
+        self.search_blog_layout.addWidget(self.search_label, 0,0)
+        self.search_blog_layout.addWidget(self.search_text, 0,1)
+        self.search_blog_layout.addWidget(self.search_b_btn, 0,2)
+        self.search_blog_layout.addWidget(self.search_results, 1,0)
+
+        self.search_results.setEnabled(False)
 
         # set widgets
         self.login_widget = QWidget()
@@ -110,11 +123,16 @@ class BloggingGUI(QMainWindow):
         self.create_blog_widget = QWidget()
         self.create_blog_widget.setLayout(self.create_blog_layout)
 
+        self.search_blog_widget = QWidget()
+        self.search_blog_widget.setLayout(self.search_blog_layout)
+
         self.stack = QStackedWidget()
         self.stack.addWidget(self.login_widget) # 0
         self.stack.addWidget(self.main_widget) # 1
         self.stack.addWidget(self.list_blogs_widget) # 2
         self.stack.addWidget(self.create_blog_widget) # 3
+        self.stack.addWidget(self.search_blog_widget) #4
+
         self.setCentralWidget(self.stack)
 
         self.quit_btn.clicked.connect(self.quit_btn_clicked)
@@ -123,9 +141,27 @@ class BloggingGUI(QMainWindow):
         self.list_all_blogs_btn.clicked.connect(self.list_all_blogs_btn_clicked)
         self.go_back_btn.clicked.connect(self.go_back_btn_clicked)
         self.create_blog_btn.clicked.connect(self.create_blog_btn_clicked)
+        self.search_blog_btn.clicked.connect(self.search_blog_btn_clicked)
 
         #self.setCentralWidget(self.login_widget)
         self.stack.setCurrentIndex(0)
+
+    def search_blog_btn_clicked(self): 
+        self.stack.setCurrentIndex(4)
+        self.search_b_btn.clicked.connect(self.search_b_btn_clicked)
+
+    def search_b_btn_clicked(self):
+        self.search_results.clear()
+
+        id = self.search_text.text()
+        blog = self.controller.search_blog(id)
+
+        if blog is not None: 
+            self.search_results.appendPlainText(str(blog))
+            self.search_text.setText("")
+        else: 
+            QMessageBox.warning(self, "Search Error", "Blog Does Not Exist")
+            self.search_text.setText("")
 
     def go_back_btn_clicked(self):
         self.stack.setCurrentIndex(1)
