@@ -200,15 +200,13 @@ class BloggingGUI(QMainWindow):
         self.list_all_posts_btn_main = QPushButton("List All Posts")
         self.finish_editing_btn_main = QPushButton("Finish Editing Blog's Posts")
 
-        self.main_menu_layout.addWidget(self.post_menu_label, 0,0)
-        self.main_menu_layout.addWidget(self.add_post_btn_main, 1,0)
-        self.main_menu_layout.addWidget(self.retrieve_post_btn_main, 2,0)
-        self.main_menu_layout.addWidget(self.update_post_btn_main, 3,0)
-        self.main_menu_layout.addWidget(self.update_blog_btn_main, 4,0)
-        self.main_menu_layout.addWidget(self.delete_blog_btn_main, 5,0)
-        self.main_menu_layout.addWidget(self.list_all_blogs_btn_main, 6,0)
-        self.main_menu_layout.addWidget(self.edit_blog_btn_main, 7,0)
-        self.main_menu_layout.addWidget(self.logout_btn_main, 8,0)
+        self.post_menu_layout.addWidget(self.post_menu_label, 0,0)
+        self.post_menu_layout.addWidget(self.add_post_btn_main, 1,0)
+        self.post_menu_layout.addWidget(self.retrieve_post_btn_main, 2,0)
+        self.post_menu_layout.addWidget(self.update_post_btn_main, 3,0)
+        self.post_menu_layout.addWidget(self.delete_post_btn_main, 4,0)
+        self.post_menu_layout.addWidget(self.list_all_posts_btn_main, 5,0)
+        self.post_menu_layout.addWidget(self.finish_editing_btn_main, 6,0)
         
         # set widgets
         self.login_widget = QWidget()
@@ -238,6 +236,9 @@ class BloggingGUI(QMainWindow):
         self.edit_blog_widget1 = QWidget()
         self.edit_blog_widget1.setLayout(self.edit_blog_layout1)
 
+        self.post_menu_widget = QWidget()
+        self.post_menu_widget.setLayout(self.post_menu_layout)
+
         self.stack = QStackedWidget()
         self.stack.addWidget(self.login_widget) # 0
         self.stack.addWidget(self.main_widget) # 1
@@ -248,6 +249,7 @@ class BloggingGUI(QMainWindow):
         self.stack.addWidget(self.update_blog_widget) # 6
         self.stack.addWidget(self.delete_blog_widget) # 7
         self.stack.addWidget(self.edit_blog_widget1) # 8
+        self.stack.addWidget(self.post_menu_widget) # 9
 
         self.setCentralWidget(self.stack)
 
@@ -270,6 +272,7 @@ class BloggingGUI(QMainWindow):
         self.go_back_btn5.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn6.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn7.clicked.connect(self.go_back_btn_clicked)
+        self.finish_editing_btn_main.clicked.connect(self.go_back_btn_clicked)
 
         self.stack.setCurrentIndex(0)
 
