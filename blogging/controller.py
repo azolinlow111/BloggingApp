@@ -113,7 +113,7 @@ class Controller:
                     
     # Removes a blog if it exists
     def delete_blog(self, id):
-        # check if user is logged in and if there are blogs
+        # check if user is logged in
         if self.login_status:
             
             #check blog to be erased is in the list 
