@@ -341,13 +341,6 @@ class BloggingGUI(QMainWindow):
             self.clear_update()
             self.stack.setCurrentIndex(0)
 
-    def clear_update(self):
-        self.old_id_text.setText("")
-        self.new_id_text.setText("")
-        self.new_name_text.setText("")
-        self.new_url_text.setText("")
-        self.new_email_text.setText("")
-
     def search_blog_btn_clicked_main(self): 
         self.stack.setCurrentIndex(4)
         self.search_results.clear()
@@ -396,9 +389,22 @@ class BloggingGUI(QMainWindow):
     def quit_btn_clicked(self): 
         self.close()
 
+    def clear_update(self):
+        self.old_id_text.setText("")
+        self.new_id_text.setText("")
+        self.new_name_text.setText("")
+        self.new_url_text.setText("")
+        self.new_email_text.setText("")
+
     def clear_login(self):
         self.username_text.setText("")
         self.password_text.setText("")
+
+    def clear_create_blog(self):
+        self.id_text.setText("")
+        self.name_text.setText("")
+        self.url_text.setText("")
+        self.email_text.setText("")
 
     def create_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(3)
@@ -413,17 +419,16 @@ class BloggingGUI(QMainWindow):
         try: 
             if self.controller.create_blog(id, name, url, email): 
                 QMessageBox.information(self, "Success", "Blog Created Successfully!")
-                self.id_text.setText("")
-                self.name_text.setText("")
-                self.url_text.setText("")
-                self.email_text.setText("")
+                self.clear_create_blog()
 
-        except (IllegalAccessException, IllegalOperationException): 
+        except IllegalOperationException: 
             QMessageBox.warning(self, "Error", "Blog Cannot Have the Same ID as Another Blog.")
-            self.id_text.setText("")
-            self.name_text.setText("")
-            self.url_text.setText("")
-            self.email_text.setText("")
+            self.clear_create_blog()
+
+        except IllegalAccessException:
+            QMessageBox.warning(self, "Error", "You Must Login First")
+            self.clear_create_blog()
+            self.stack.setCurrentIndex(0)
 
     def login_btn_clicked(self): 
         username = self.username_text.text()
@@ -434,8 +439,12 @@ class BloggingGUI(QMainWindow):
             if success: 
                 #QMessageBox.information(self, "Logged In", "Logged in correctly")
                 self.stack.setCurrentIndex(1)
-        except (InvalidLoginException, DuplicateLoginException): 
+        except InvalidLoginException: 
             QMessageBox.warning(self, "Login Error", "Not logged in correctly")
+            self.clear_login()
+
+        except DuplicateLoginException:
+            QMessageBox.warning(self, "Login Error", "Cannot Login While Logged In")
             self.clear_login()
 
     def logout_btn_clicked(self):
