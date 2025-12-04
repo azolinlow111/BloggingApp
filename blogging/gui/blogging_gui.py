@@ -244,6 +244,28 @@ class BloggingGUI(QMainWindow):
         self.retrieve_post_layout.addWidget(self.post_retrieved, 1,0) 
         self.retrieve_post_layout.addWidget(self.go_back_btn_posts2,2,0)
         
+        #update post layout 
+        self.update_post_layout = QGridLayout()
+        
+        self.post_code_label = QLabel("Enter Code")
+        self.post_code = QLineEdit()
+        self.post_new_title_label = QLabel("New Title")
+        self.post_new_title = QLineEdit()
+        self.post_new_text_label = QLabel("New Text")
+        self.post_new_text = QLineEdit()
+        self.update_post_btn = QPushButton("Update")
+        self.go_back_btn_posts3 = QPushButton("Go Back To Post Menu")
+        
+        self.update_post_layout.addWidget(self.post_code_label, 0,0)
+        self.update_post_layout.addWidget(self.post_code, 0,1)
+        self.update_post_layout.addWidget(self.post_new_title_label, 1,0)
+        self.update_post_layout.addWidget(self.post_new_title, 1,1)
+        self.update_post_layout.addWidget(self.post_new_text_label, 2,0)
+        self.update_post_layout.addWidget(self.post_new_text, 2,1)
+        self.update_post_layout.addWidget(self.go_back_btn_posts3,3,0)
+        self.update_post_layout.addWidget(self.update_post_btn,3,1)
+        
+        
         # set widgets
         self.login_widget = QWidget()
         self.login_widget.setLayout(login_layout)
@@ -280,6 +302,9 @@ class BloggingGUI(QMainWindow):
         
         self.retrieve_post_widget = QWidget()
         self.retrieve_post_widget.setLayout(self.retrieve_post_layout)
+        
+        self.update_post_widget = QWidget()
+        self.update_post_widget.setLayout(self.update_post_layout)
 
         self.stack = QStackedWidget()
         self.stack.addWidget(self.login_widget) # 0
@@ -294,6 +319,7 @@ class BloggingGUI(QMainWindow):
         self.stack.addWidget(self.post_menu_widget) # 9
         self.stack.addWidget(self.add_post_widget) #10
         self.stack.addWidget(self.retrieve_post_widget) #11
+        self.stack.addWidget(self.update_post_widget) #12
 
         self.setCentralWidget(self.stack)
 
@@ -311,6 +337,8 @@ class BloggingGUI(QMainWindow):
         self.add_post_btn.clicked.connect(self.add_post_btn_clicked)
         self.retrieve_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(11))
         self.retrieve_post_btn.clicked.connect(self.retrieve_post_btn_clicked)
+        self.update_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(12))
+        self.update_post_btn.clicked.connect(self.update_post_btn_clicked)
 
         # go back buttons
         self.go_back_btn1.clicked.connect(self.go_back_btn_clicked)
@@ -324,6 +352,7 @@ class BloggingGUI(QMainWindow):
         
         self.go_back_btn_posts1.clicked.connect(self.go_back_btn_posts_clicked)
         self.go_back_btn_posts2.clicked.connect(self.go_back_btn_posts_clicked)
+        self.go_back_btn_posts3.clicked.connect(self.go_back_btn_posts_clicked)
 
         self.stack.setCurrentIndex(0)
 
@@ -513,7 +542,13 @@ class BloggingGUI(QMainWindow):
         for b in blogs:
             self.list_blog_text_box.appendPlainText(str(b))
   
-    #function to go back to post editing options
+  # ----- POST FUNCTIONS -----
+  
+    #changes layout to index
+    def post_menu_btn_clicked(self, index): 
+        self.stack.setCurrentIndex(index)
+
+    #go back to post editing options
     def go_back_btn_posts_clicked(self): 
         self.stack.setCurrentIndex(9)
    
@@ -530,11 +565,6 @@ class BloggingGUI(QMainWindow):
            QMessageBox.warning(self, "Create Post Error", "Cannot Create Post Properly")
            self.post_text.setText("")
            self.post_title.setText("")
-    
-    #changes layout to index
-    def post_menu_btn_clicked(self, index): 
-        self.stack.setCurrentIndex(index)
-
     
     #retrieves post containing keyword in text 
     def retrieve_post_btn_clicked(self): 
@@ -554,6 +584,22 @@ class BloggingGUI(QMainWindow):
             pass
         
         self.post_keyword.clear()
+    
+    #updates a post 
+    def update_post_btn_clicked(self): 
+        code = self.post_code.text() 
+        title = self.post_new_title.text()
+        text = self.post_new_text.text()
+        
+        try: 
+            self.controller.update_post(int(code), title, text)
+        
+        except (NoCurrentBlogException, IllegalAccessException): 
+            pass
+        
+        self.post_code.clear()
+        self.post_new_title.clear()
+        self.post_new_text.clear()
 
 
 def main():
