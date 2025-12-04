@@ -420,6 +420,8 @@ class BloggingGUI(QMainWindow):
             QMessageBox.warning(self, "Error", "You Must Login First")
             self.edit_id_text.setText("")
             self.stack.setCurrentIndex(0)
+        
+        self.edit_id_text.clear()
 
     def delete_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(7)
