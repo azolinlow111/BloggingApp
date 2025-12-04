@@ -6,8 +6,10 @@ from blogging.controller import Controller
 
 from blogging.exception.invalid_login_exception import InvalidLoginException
 from blogging.exception.duplicate_login_exception import DuplicateLoginException
-from blogging.exception.illegal_operation_exception import IllegalOperationException
+from blogging.exception.invalid_logout_exception import InvalidLogoutException
 from blogging.exception.illegal_access_exception import IllegalAccessException
+from blogging.exception.illegal_operation_exception import IllegalOperationException
+from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 class BloggingGUI(QMainWindow):
 
@@ -199,6 +201,7 @@ class BloggingGUI(QMainWindow):
         self.delete_post_btn_main = QPushButton("Delete a Post")
         self.list_all_posts_btn_main = QPushButton("List All Posts")
         self.finish_editing_btn_main = QPushButton("Finish Editing Blog's Posts")
+        
 
         self.post_menu_layout.addWidget(self.post_menu_label, 0,0)
         self.post_menu_layout.addWidget(self.add_post_btn_main, 1,0)
@@ -207,6 +210,39 @@ class BloggingGUI(QMainWindow):
         self.post_menu_layout.addWidget(self.delete_post_btn_main, 4,0)
         self.post_menu_layout.addWidget(self.list_all_posts_btn_main, 5,0)
         self.post_menu_layout.addWidget(self.finish_editing_btn_main, 6,0)
+        
+        #add post layout 
+        self.add_post_layout = QGridLayout()
+        
+        self.post_title_label = QLabel("Add Post Title")
+        self.post_title = QLineEdit()
+        self.post_text_label = QLabel("Add Post Text")
+        self.post_text = QLineEdit()
+        self.add_post_btn = QPushButton("Create New Post")
+        self.go_back_btn_posts1 = QPushButton("Go Back To Post Menu")
+        
+        self.add_post_layout.addWidget(self.post_title_label, 0,0)
+        self.add_post_layout.addWidget(self.post_title, 0,1)
+        self.add_post_layout.addWidget(self.post_text_label, 1,0)
+        self.add_post_layout.addWidget(self.post_text, 1,1)
+        self.add_post_layout.addWidget(self.add_post_btn, 2,1)
+        self.add_post_layout.addWidget(self.go_back_btn_posts1,2,0)
+        
+        #retrieve post layout 
+        self.retrieve_post_layout = QGridLayout() 
+        
+        self.post_keyword_label = QLabel("Search Post By Text")
+        self.post_keyword = QLineEdit()
+        self.retrieve_post_btn = QPushButton("Search") 
+        self.post_retrieved = QPlainTextEdit()
+        self.post_retrieved.setEnabled(False) 
+        self.go_back_btn_posts2 = QPushButton("Go Back To Post Menu")
+        
+        self.retrieve_post_layout.addWidget(self.post_keyword_label, 0,0)
+        self.retrieve_post_layout.addWidget(self.post_keyword, 0,1)        
+        self.retrieve_post_layout.addWidget(self.retrieve_post_btn, 0,2)
+        self.retrieve_post_layout.addWidget(self.post_retrieved, 1,0) 
+        self.retrieve_post_layout.addWidget(self.go_back_btn_posts2,2,0)
         
         # set widgets
         self.login_widget = QWidget()
@@ -238,6 +274,12 @@ class BloggingGUI(QMainWindow):
 
         self.post_menu_widget = QWidget()
         self.post_menu_widget.setLayout(self.post_menu_layout)
+        
+        self.add_post_widget = QWidget()
+        self.add_post_widget.setLayout(self.add_post_layout)
+        
+        self.retrieve_post_widget = QWidget()
+        self.retrieve_post_widget.setLayout(self.retrieve_post_layout)
 
         self.stack = QStackedWidget()
         self.stack.addWidget(self.login_widget) # 0
@@ -250,6 +292,8 @@ class BloggingGUI(QMainWindow):
         self.stack.addWidget(self.delete_blog_widget) # 7
         self.stack.addWidget(self.edit_blog_widget1) # 8
         self.stack.addWidget(self.post_menu_widget) # 9
+        self.stack.addWidget(self.add_post_widget) #10
+        self.stack.addWidget(self.retrieve_post_widget) #11
 
         self.setCentralWidget(self.stack)
 
@@ -263,6 +307,10 @@ class BloggingGUI(QMainWindow):
         self.update_blog_btn_main.clicked.connect(self.update_blog_btn_clicked_main)
         self.delete_blog_btn_main.clicked.connect(self.delete_blog_btn_clicked_main)
         self.edit_blog_btn_main.clicked.connect(self.edit_blog_btn_clicked_main)
+        self.add_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(10))
+        self.add_post_btn.clicked.connect(self.add_post_btn_clicked)
+        self.retrieve_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(11))
+        self.retrieve_post_btn.clicked.connect(self.retrieve_post_btn_clicked)
 
         # go back buttons
         self.go_back_btn1.clicked.connect(self.go_back_btn_clicked)
@@ -273,6 +321,9 @@ class BloggingGUI(QMainWindow):
         self.go_back_btn6.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn7.clicked.connect(self.go_back_btn_clicked)
         self.finish_editing_btn_main.clicked.connect(self.go_back_btn_clicked)
+        
+        self.go_back_btn_posts1.clicked.connect(self.go_back_btn_posts_clicked)
+        self.go_back_btn_posts2.clicked.connect(self.go_back_btn_posts_clicked)
 
         self.stack.setCurrentIndex(0)
 
@@ -461,6 +512,49 @@ class BloggingGUI(QMainWindow):
 
         for b in blogs:
             self.list_blog_text_box.appendPlainText(str(b))
+  
+    #function to go back to post editing options
+    def go_back_btn_posts_clicked(self): 
+        self.stack.setCurrentIndex(9)
+   
+   #takes user input and creates a post in current_blog 
+    def add_post_btn_clicked(self): 
+       title = self.post_title.text()
+       text = self.post_text.text()
+       try: 
+           self.controller.create_post(title, text)
+           QMessageBox.information(self, "success", "Post Created Successfully!")
+           self.post_text.setText("")
+           self.post_title.setText("")
+       except (NoCurrentBlogException, IllegalAccessException): 
+           QMessageBox.warning(self, "Create Post Error", "Cannot Create Post Properly")
+           self.post_text.setText("")
+           self.post_title.setText("")
+    
+    #changes layout to index
+    def post_menu_btn_clicked(self, index): 
+        self.stack.setCurrentIndex(index)
+
+    
+    #retrieves post containing keyword in text 
+    def retrieve_post_btn_clicked(self): 
+        self.post_retrieved.clear()
+        keyword = self.post_keyword.text()
+
+        try: 
+            post_li = self.controller.retrieve_posts(keyword)
+
+            if len(post_li) > 0: 
+                for post in post_li: 
+                    self.post_retrieved.appendPlainText(str(post))
+            else: 
+                QMessageBox.warning(None, "Error", "No matching Posts")
+
+        except (NoCurrentBlogException, IllegalAccessException):
+            pass
+        
+        self.post_keyword.clear()
+
 
 def main():
     app = QApplication(sys.argv)
