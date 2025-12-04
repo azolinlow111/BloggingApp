@@ -9,11 +9,11 @@ class Post:
 
     def __str__(self) -> str:
         # returns printable string representation of a post
-        return f"Title: {self.title}. Post Content: {self.text}"
+        return f"Title: {self.title}. Text: {self.text}"
 
     def __repr__(self) -> str:
         # returns string representation of a post
-        return f"Integer Code: {self.code}. Title: {self.title}. Post Content: {self.text}"
+        return f"Integer Code: {self.code}. Title: {self.title}. Text: {self.text}"
 
     def __eq__(self, other) -> bool:
         # compares post based on code, title, text
