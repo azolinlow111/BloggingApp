@@ -30,7 +30,7 @@ class ListPostGUI:
         try: 
             posts = self.controller.list_posts()
             for post in posts: 
-                self.post_gui.list_posts.appendPlainText(str(post))
+                self.list_posts.appendPlainText(str(post))
 
         except NoCurrentBlogException:
             QMessageBox.warning(None, "List Posts Error", "Cannot List Posts Without Blog Selected") 
