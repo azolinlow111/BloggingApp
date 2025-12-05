@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QMainWindow, QGridLayout, QPushButton, QWidget, QLabel, QLineEdit, QMessageBox, QStackedWidget, QPlainTextEdit
 from blogging.controller import Controller 
 
+
 from blogging.exception.invalid_login_exception import InvalidLoginException
 from blogging.exception.duplicate_login_exception import DuplicateLoginException
 from blogging.exception.invalid_logout_exception import InvalidLogoutException
@@ -13,6 +14,7 @@ from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 
 from blogging.gui.post_gui import PostGUI
+from blogging.gui.login_gui import LoginGUI
 
 class BloggingGUI(QMainWindow):
 
@@ -23,29 +25,10 @@ class BloggingGUI(QMainWindow):
         self.configuration.__class__.autosave = True
         self.controller = Controller()
         
+        self.login_gui = LoginGUI(self.controller)
         self.post_gui = PostGUI(self.controller)
         
         self.setWindowTitle("Blogging System")
-        
-        
-        
-        login_layout = QGridLayout()
-        
-        #setting variables for login
-        self.username_label = QLabel("Username")
-        self.quit_btn = QPushButton("Quit")
-        self.login_btn = QPushButton("Log in")
-        self.password_label = QLabel("Password")
-        self.username_text = QLineEdit()
-        self.password_text = QLineEdit()
-        
-        #add to login_layout
-        login_layout.addWidget(self.username_label, 0,0)
-        login_layout.addWidget(self.username_text, 0,1)
-        login_layout.addWidget(self.password_label , 1, 0)
-        login_layout.addWidget(self.password_text, 1,1)
-        login_layout.addWidget(self.login_btn, 2,1)
-        login_layout.addWidget(self.quit_btn, 2, 0)
 
         # add main menu layout
         self.main_menu_layout = QGridLayout()
@@ -217,8 +200,7 @@ class BloggingGUI(QMainWindow):
         self.post_menu_layout.addWidget(self.finish_editing_btn_main, 6,0)
 
         # set widgets
-        self.login_widget = QWidget()
-        self.login_widget.setLayout(login_layout)
+        
 
         self.main_widget = QWidget()
         self.main_widget.setLayout(self.main_menu_layout)
@@ -249,7 +231,7 @@ class BloggingGUI(QMainWindow):
     
    
         self.stack = QStackedWidget()
-        self.stack.addWidget(self.login_widget) # 0
+        self.stack.addWidget(self.login_gui.login_widget) # 0
         self.stack.addWidget(self.main_widget) # 1
         self.stack.addWidget(self.list_blogs_widget) # 2
         self.stack.addWidget(self.create_blog_widget) # 3
@@ -267,8 +249,8 @@ class BloggingGUI(QMainWindow):
 
         self.setCentralWidget(self.stack)
 
-        self.quit_btn.clicked.connect(self.quit_btn_clicked)
-        self.login_btn.clicked.connect(self.login_btn_clicked)
+        self.login_gui.quit_btn.clicked.connect(self.quit_btn_clicked)
+        self.login_gui.login_btn.clicked.connect(self.login_btn_clicked)
         self.logout_btn_main.clicked.connect(self.logout_btn_clicked)
         self.list_all_blogs_btn_main.clicked.connect(self.list_all_blogs_btn_clicked)
         self.create_blog_btn_main.clicked.connect(self.create_blog_btn_clicked_main)
@@ -308,27 +290,18 @@ class BloggingGUI(QMainWindow):
 
 #----- LOGIN/LOGOUT ----
     def login_btn_clicked(self): 
-        username = self.username_text.text()
-        password = self.password_text.text()
-        
-        try: 
-            success = self.controller.login(username, password)
-            if success: 
-                #QMessageBox.information(self, "Logged In", "Logged in correctly")
-                self.stack.setCurrentIndex(1)
-        except InvalidLoginException: 
-            QMessageBox.warning(self, "Login Error", "Not logged in correctly")
-            self.clear_login()
+        i = self.login_gui.login_btn_clicked()
 
-        except DuplicateLoginException:
-            QMessageBox.warning(self, "Login Error", "Cannot Login While Logged In")
-            self.clear_login()
+        self.stack.setCurrentIndex(i)
 
     def logout_btn_clicked(self):
         self.controller.logout()
 
-        self.stack.setCurrentIndex(0)
         self.clear_login()
+        self.stack.setCurrentIndex(0)
+
+    def quit_btn_clicked(self): 
+        self.close()
 
 #---- BLOG FUNCTIONS ------ 
 
@@ -444,8 +417,7 @@ class BloggingGUI(QMainWindow):
     def go_back_btn_clicked(self):
         self.stack.setCurrentIndex(1)
     
-    def quit_btn_clicked(self): 
-        self.close()
+    
 
     def clear_update(self):
         self.old_id_text.setText("")
@@ -454,9 +426,7 @@ class BloggingGUI(QMainWindow):
         self.new_url_text.setText("")
         self.new_email_text.setText("")
 
-    def clear_login(self):
-        self.username_text.setText("")
-        self.password_text.setText("")
+    
 
     def clear_create_blog(self):
         self.id_text.setText("")

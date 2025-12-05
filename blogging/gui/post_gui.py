@@ -11,10 +11,7 @@ from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 class PostGUI: 
     def __init__(self, controller):
-        self.controller = controller 
-        self.setup_post_layouts() 
-    
-    def setup_post_layouts(self): 
+        self.controller = controller  
         
         #add post layout 
         self.add_post_layout = QGridLayout()
