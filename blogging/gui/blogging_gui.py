@@ -268,8 +268,9 @@ class BloggingGUI(QMainWindow):
         
     #list posts 
     def list_posts_btn_clicked(self): 
-        
         self.stack.setCurrentIndex(14)
+        
+        self.list_posts_gui.list_posts_btn_clicked()
 
 def main():
     app = QApplication(sys.argv)
