@@ -232,6 +232,9 @@ class BloggingGUI(QMainWindow):
 
     def retrieve_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(5)
+        self.retrieve_blogs_gui.retrieved_blogs.setModel(None)
+        self.retrieve_blogs_gui.retrieve_blogs_text.clear()
+        
    
     def go_back_btn_clicked(self):
         self.stack.setCurrentIndex(1)
