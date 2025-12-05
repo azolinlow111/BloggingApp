@@ -17,6 +17,9 @@ from blogging.gui.list_all_blogs_gui import ListBlogsGUI
 from blogging.gui.post_gui import PostGUI
 from blogging.gui.login_gui import LoginGUI
 from blogging.gui.delete_blog_gui import DeleteBlogGUI
+from blogging.gui.create_blog_gui import CreateBlogGUI
+from blogging.gui.search_blog_gui import SearchBlogGUI
+from blogging.gui.update_blog_gui import UpdateBlogGUI
 
 
 
@@ -33,6 +36,9 @@ class BloggingGUI(QMainWindow):
         self.login_gui = LoginGUI(self.controller)
         self.post_gui = PostGUI(self.controller)
         self.delete_blog_gui = DeleteBlogGUI(self.controller)
+        self.create_blog_gui = CreateBlogGUI(self.controller)
+        self.search_blog_gui = SearchBlogGUI(self.controller)
+        self.update_blog_gui = UpdateBlogGUI(self.controller)
         
         self.setWindowTitle("Blogging System")
 
@@ -60,77 +66,6 @@ class BloggingGUI(QMainWindow):
         self.main_menu_layout.addWidget(self.logout_btn_main, 8,0)
 
 
-        # creating blogs
-        self.create_blog_layout = QGridLayout()
-        
-        self.id_label = QLabel("ID")
-        self.name_label = QLabel("Name")
-        self.url_label = QLabel("URL")
-        self.email_label = QLabel("Email")
-        self.id_text = QLineEdit()
-        self.name_text = QLineEdit()
-        self.url_text = QLineEdit()
-        self.email_text = QLineEdit()
-        self.create_new_blog_btn = QPushButton("Create")
-        self.go_back_btn1 = QPushButton("Go Back to Main Menu")
-        
-        self.create_blog_layout.addWidget(self.id_label, 0,0)
-        self.create_blog_layout.addWidget(self.id_text, 0,1)
-        self.create_blog_layout.addWidget(self.name_label, 1,0)
-        self.create_blog_layout.addWidget(self.name_text, 1,1)
-        self.create_blog_layout.addWidget(self.url_label, 2,0)
-        self.create_blog_layout.addWidget(self.url_text, 2,1)
-        self.create_blog_layout.addWidget(self.email_label, 3,0)
-        self.create_blog_layout.addWidget(self.email_text, 3,1)
-        self.create_blog_layout.addWidget(self.go_back_btn1, 4,0)
-        self.create_blog_layout.addWidget(self.create_new_blog_btn, 4, 1)
-
-        #updating a blog
-        self.update_blog_layout = QGridLayout()
-        
-        self.old_id_label = QLabel("Current ID")
-        self.new_id_label = QLabel("New ID")
-        self.new_name_label = QLabel("New Name")
-        self.new_url_label = QLabel("New URL")
-        self.new_email_label = QLabel("New Email")
-        self.old_id_text = QLineEdit()
-        self.new_id_text = QLineEdit()
-        self.new_name_text = QLineEdit()
-        self.new_url_text = QLineEdit()
-        self.new_email_text = QLineEdit()
-        self.update_blog_btn = QPushButton("Update")
-        self.go_back_btn5 = QPushButton("Go Back to Main Menu")
-        
-        self.update_blog_layout.addWidget(self.old_id_label, 0,0)
-        self.update_blog_layout.addWidget(self.old_id_text, 0,1)
-        self.update_blog_layout.addWidget(self.new_id_label, 1,0)
-        self.update_blog_layout.addWidget(self.new_id_text, 1,1)
-        self.update_blog_layout.addWidget(self.new_name_label, 2,0)
-        self.update_blog_layout.addWidget(self.new_name_text, 2,1)
-        self.update_blog_layout.addWidget(self.new_url_label, 3,0)
-        self.update_blog_layout.addWidget(self.new_url_text, 3,1)
-        self.update_blog_layout.addWidget(self.new_email_label, 4,0)
-        self.update_blog_layout.addWidget(self.new_email_text, 4,1)
-        self.update_blog_layout.addWidget(self.go_back_btn5, 5,0)
-        self.update_blog_layout.addWidget(self.update_blog_btn, 5, 1)
-
-        # search blog
-        self.search_blog_layout = QGridLayout()
-
-        self.search_label = QLabel("Enter A ID")
-        self.search_text = QLineEdit()
-        self.search_b_btn = QPushButton("Search")
-        self.search_results = QPlainTextEdit()
-        self.go_back_btn3 = QPushButton("Go Back to Main Menu")
-
-        self.search_blog_layout.addWidget(self.search_label, 0,0)
-        self.search_blog_layout.addWidget(self.search_text, 0,1)
-        self.search_blog_layout.addWidget(self.search_b_btn, 0,2)
-        self.search_blog_layout.addWidget(self.search_results, 1,0)
-        self.search_blog_layout.addWidget(self.go_back_btn3, 2, 0)
-
-        self.search_results.setEnabled(False)
-
         # retrieve blogs by name
         self.retrieve_blogs_layout = QGridLayout()
 
@@ -147,8 +82,6 @@ class BloggingGUI(QMainWindow):
         self.retrieve_blogs_layout.addWidget(self.go_back_btn4, 2,0)
 
         self.retrieved_blogs.setEnabled(False)
-
-        
 
         # start editing a blog, ID screen
         self.edit_blog_layout1 = QGridLayout()
@@ -174,8 +107,7 @@ class BloggingGUI(QMainWindow):
         self.delete_post_btn_main = QPushButton("Delete a Post")
         self.list_all_posts_btn_main = QPushButton("List All Posts")
         self.finish_editing_btn_main = QPushButton("Finish Editing Blog's Posts")
-        
-
+    
         self.post_menu_layout.addWidget(self.post_menu_label, 0,0)
         self.post_menu_layout.addWidget(self.add_post_btn_main, 1,0)
         self.post_menu_layout.addWidget(self.retrieve_post_btn_main, 2,0)
@@ -185,38 +117,29 @@ class BloggingGUI(QMainWindow):
         self.post_menu_layout.addWidget(self.finish_editing_btn_main, 6,0)
 
         # set widgets
-        
-
         self.main_widget = QWidget()
         self.main_widget.setLayout(self.main_menu_layout)
 
-        self.create_blog_widget = QWidget()
-        self.create_blog_widget.setLayout(self.create_blog_layout)
-
-        self.search_blog_widget = QWidget()
-        self.search_blog_widget.setLayout(self.search_blog_layout)
 
         self.retrieve_blogs_widget = QWidget()
         self.retrieve_blogs_widget.setLayout(self.retrieve_blogs_layout)
-
-        self.update_blog_widget = QWidget()
-        self.update_blog_widget.setLayout(self.update_blog_layout)
 
         self.edit_blog_widget1 = QWidget()
         self.edit_blog_widget1.setLayout(self.edit_blog_layout1)
 
         self.post_menu_widget = QWidget()
         self.post_menu_widget.setLayout(self.post_menu_layout)
-    
    
         self.stack = QStackedWidget()
         self.stack.addWidget(self.login_gui.login_widget) # 0
         self.stack.addWidget(self.main_widget) # 1
+
         self.stack.addWidget(self.list_blogs_gui.list_blogs_widget) # 2
-        self.stack.addWidget(self.create_blog_widget) # 3
-        self.stack.addWidget(self.search_blog_widget) # 4
+        self.stack.addWidget(self.create_blog_gui.create_blog_widget) # 3
+        self.stack.addWidget(self.search_blog_gui.search_blog_widget) # 4
+
         self.stack.addWidget(self.retrieve_blogs_widget) # 5
-        self.stack.addWidget(self.update_blog_widget) # 6
+        self.stack.addWidget(self.update_blog_gui.update_blog_widget) # 6
         self.stack.addWidget(self.delete_blog_gui.delete_blog_widget) # 7
         self.stack.addWidget(self.edit_blog_widget1) # 8
         self.stack.addWidget(self.post_menu_widget) # 9
@@ -250,11 +173,14 @@ class BloggingGUI(QMainWindow):
         self.list_all_posts_btn_main.clicked.connect(self.list_posts_btn_clicked)
 
         # go back buttons
-        self.go_back_btn1.clicked.connect(self.go_back_btn_clicked)
+
+        self.create_blog_gui.go_back_btn1.clicked.connect(self.go_back_btn_clicked)
         self.list_blogs_gui.go_back_btn2.clicked.connect(self.go_back_btn_clicked)
-        self.go_back_btn3.clicked.connect(self.go_back_btn_clicked)
+        self.list_blogs_gui.go_back_btn2.clicked.connect(self.go_back_btn_clicked)
+        self.search_blog_gui.go_back_btn3.clicked.connect(self.go_back_btn_clicked)
+
         self.go_back_btn4.clicked.connect(self.go_back_btn_clicked)
-        self.go_back_btn5.clicked.connect(self.go_back_btn_clicked)
+        self.update_blog_gui.go_back_btn5.clicked.connect(self.go_back_btn_clicked)
         self.delete_blog_gui.go_back_btn6.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn7.clicked.connect(self.go_back_btn_clicked)
         self.finish_editing_btn_main.clicked.connect(self.go_back_btn_clicked)
@@ -306,56 +232,21 @@ class BloggingGUI(QMainWindow):
         
         self.edit_id_text.clear()
 
-    def delete_blog_btn_clicked_main(self):
-        self.stack.setCurrentIndex(7)
-        self.delete_blog_gui.delete_blog_btn.clicked.connect(self.delete_blog_gui.delete_blog_btn_clicked)
-
-    def delete_blog_btn_clicked(self):
-        i = self.delete_blog_gui.delete_blog_btn_clicked()
-
-        self.stack.setCurrentIndex(i)
+    
 
     def update_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(6)
-        self.update_blog_btn.clicked.connect(self.update_blog_btn_clicked)
+        self.update_blog_gui.update_blog_btn.clicked.connect(self.update_blog_gui.update_blog_btn_clicked)
 
     def update_blog_btn_clicked(self):
-        old_id = self.old_id_text.text()
-        id = self.new_id_text.text()
-        name = self.new_name_text.text()
-        url = self.new_url_text.text()
-        email = self.new_email_text.text()
+        i = self.update_blog_gui.update_blog_btn_clicked()
 
-        try: 
-            if self.controller.update_blog(old_id, id, name, url, email): 
-                QMessageBox.information(self, "Success", "Blog Updated Successfully!")
-                self.clear_update()
-
-        except IllegalOperationException: 
-            QMessageBox.warning(self, "Error", "Could Not Update Blog.")
-            self.clear_update()
-        except IllegalAccessException:
-            QMessageBox.warning(self, "Error", "You Must Login First")
-            self.clear_update()
-            self.stack.setCurrentIndex(0)
+        self.stack.setCurrentIndex(i)
 
     def search_blog_btn_clicked_main(self): 
         self.stack.setCurrentIndex(4)
-        self.search_results.clear()
-        self.search_b_btn.clicked.connect(self.search_b_btn_clicked)
-
-    def search_b_btn_clicked(self):
-        self.search_results.clear()
-
-        id = self.search_text.text()
-        blog = self.controller.search_blog(id)
-
-        if blog is not None: 
-            self.search_results.appendPlainText(str(blog))
-            self.search_text.setText("")
-        else: 
-            QMessageBox.warning(self, "Search Error", "Blog Does Not Exist")
-            self.search_text.setText("")
+        self.search_blog_gui.search_results.clear()
+        self.search_blog_gui.search_b_btn.clicked.connect(self.search_blog_gui.search_b_btn_clicked)
 
     def retrieve_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(5)
@@ -384,46 +275,22 @@ class BloggingGUI(QMainWindow):
     def go_back_btn_clicked(self):
         self.stack.setCurrentIndex(1)
     
-    
+    def delete_blog_btn_clicked_main(self):
+        self.stack.setCurrentIndex(7)
+        self.delete_blog_gui.delete_blog_btn.clicked.connect(self.delete_blog_gui.delete_blog_btn_clicked)
 
-    def clear_update(self):
-        self.old_id_text.setText("")
-        self.new_id_text.setText("")
-        self.new_name_text.setText("")
-        self.new_url_text.setText("")
-        self.new_email_text.setText("")
+    def delete_blog_btn_clicked(self):
+        i = self.delete_blog_gui.delete_blog_btn_clicked()
 
-    
-
-    def clear_create_blog(self):
-        self.id_text.setText("")
-        self.name_text.setText("")
-        self.url_text.setText("")
-        self.email_text.setText("")
+        self.stack.setCurrentIndex(i)
 
     def create_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(3)
-        self.create_new_blog_btn.clicked.connect(self.create_new_blog_btn_clicked)
+        self.create_blog_gui.create_new_blog_btn.clicked.connect(self.create_new_blog_btn_clicked)
     
     def create_new_blog_btn_clicked(self):
-        id = self.id_text.text()
-        name = self.name_text.text()
-        url = self.url_text.text()
-        email = self.email_text.text()
-
-        try: 
-            if self.controller.create_blog(id, name, url, email): 
-                QMessageBox.information(self, "Success", "Blog Created Successfully!")
-                self.clear_create_blog()
-
-        except IllegalOperationException: 
-            QMessageBox.warning(self, "Error", "Blog Cannot Have the Same ID as Another Blog.")
-            self.clear_create_blog()
-
-        except IllegalAccessException:
-            QMessageBox.warning(self, "Error", "You Must Login First")
-            self.clear_create_blog()
-            self.stack.setCurrentIndex(0)
+        i = self.create_blog_gui.create_new_blog_btn_clicked()
+        self.stack.setCurrentIndex(i)
 
     def list_all_blogs_btn_clicked(self):
         self.stack.setCurrentIndex(2)
