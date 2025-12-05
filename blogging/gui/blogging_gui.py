@@ -12,10 +12,13 @@ from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
-
+from blogging.gui.list_all_blogs_gui import ListBlogsGUI
+from blogging.gui.list_all_blogs_gui import ListBlogsGUI
 from blogging.gui.post_gui import PostGUI
 from blogging.gui.login_gui import LoginGUI
 from blogging.gui.delete_blog_gui import DeleteBlogGUI
+
+
 
 class BloggingGUI(QMainWindow):
 
@@ -26,6 +29,7 @@ class BloggingGUI(QMainWindow):
         self.configuration.__class__.autosave = True
         self.controller = Controller()
         
+        self.list_blogs_gui = ListBlogsGUI(self.controller)
         self.login_gui = LoginGUI(self.controller)
         self.post_gui = PostGUI(self.controller)
         self.delete_blog_gui = DeleteBlogGUI(self.controller)
@@ -55,16 +59,6 @@ class BloggingGUI(QMainWindow):
         self.main_menu_layout.addWidget(self.edit_blog_btn_main, 7,0)
         self.main_menu_layout.addWidget(self.logout_btn_main, 8,0)
 
-        #listing blogs
-        self.list_blogs_layout = QGridLayout()
-        self.list_blog_text_box = QPlainTextEdit()
-        self.list_blogs_label = QLabel("List of All Blogs")
-        self.go_back_btn2 = QPushButton("Go Back to Main Menu")
-
-        self.list_blogs_layout.addWidget(self.list_blogs_label, 0,0)
-        self.list_blogs_layout.addWidget(self.list_blog_text_box, 1,0)
-        self.list_blogs_layout.addWidget(self.go_back_btn2, 2, 0)
-        self.list_blog_text_box.setEnabled(False)
 
         # creating blogs
         self.create_blog_layout = QGridLayout()
@@ -196,9 +190,6 @@ class BloggingGUI(QMainWindow):
         self.main_widget = QWidget()
         self.main_widget.setLayout(self.main_menu_layout)
 
-        self.list_blogs_widget = QWidget()
-        self.list_blogs_widget.setLayout(self.list_blogs_layout)
-
         self.create_blog_widget = QWidget()
         self.create_blog_widget.setLayout(self.create_blog_layout)
 
@@ -221,7 +212,7 @@ class BloggingGUI(QMainWindow):
         self.stack = QStackedWidget()
         self.stack.addWidget(self.login_gui.login_widget) # 0
         self.stack.addWidget(self.main_widget) # 1
-        self.stack.addWidget(self.list_blogs_widget) # 2
+        self.stack.addWidget(self.list_blogs_gui.list_blogs_widget) # 2
         self.stack.addWidget(self.create_blog_widget) # 3
         self.stack.addWidget(self.search_blog_widget) # 4
         self.stack.addWidget(self.retrieve_blogs_widget) # 5
@@ -260,7 +251,7 @@ class BloggingGUI(QMainWindow):
 
         # go back buttons
         self.go_back_btn1.clicked.connect(self.go_back_btn_clicked)
-        self.go_back_btn2.clicked.connect(self.go_back_btn_clicked)
+        self.list_blogs_gui.go_back_btn2.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn3.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn4.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn5.clicked.connect(self.go_back_btn_clicked)
@@ -436,12 +427,7 @@ class BloggingGUI(QMainWindow):
 
     def list_all_blogs_btn_clicked(self):
         self.stack.setCurrentIndex(2)
-        self.list_blog_text_box.clear()
-
-        blogs = self.controller.list_blogs()
-
-        for b in blogs:
-            self.list_blog_text_box.appendPlainText(str(b))
+        self.list_blogs_gui.load_table()
   
   # ----- POST FUNCTIONS -----
   
