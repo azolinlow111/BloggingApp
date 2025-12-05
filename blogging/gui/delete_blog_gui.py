@@ -49,3 +49,4 @@ class DeleteBlogGUI:
             QMessageBox.warning(None, "Error", "You Must Login First")
             self.id_delete_blog_text.setText("")
             return 0
+        

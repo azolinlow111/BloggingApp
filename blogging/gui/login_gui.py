@@ -57,14 +57,4 @@ class LoginGUI:
     def clear_login(self):
         self.username_text.setText("")
         self.password_text.setText("")
-
-    
-
-def main():
-    app = QApplication(sys.argv)
-    window = LoginGUI()
-    window.show()
-    app.exec()
-
-if __name__ == '__main__':
-    main()
+        
