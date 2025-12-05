@@ -26,6 +26,7 @@ class ListBlogsGUI:
         self.list_blogs_widget = QWidget()
         self.list_blogs_widget.setLayout(self.list_blogs_layout)
     
+    #create table and display 
     def load_table(self): 
         
         try:

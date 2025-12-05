@@ -10,7 +10,7 @@ class UpdateBlogGUI:
     def __init__(self, controller):
         self.controller = controller
 
-        #updating a blog
+        #updating a blog layout
         self.update_blog_layout = QGridLayout()
         
         self.old_id_label = QLabel("Current ID")
@@ -42,6 +42,7 @@ class UpdateBlogGUI:
         self.update_blog_widget = QWidget()
         self.update_blog_widget.setLayout(self.update_blog_layout)
 
+    #uodate blog 
     def update_blog_btn_clicked(self):
         old_id = self.old_id_text.text()
         id = self.new_id_text.text()
@@ -63,7 +64,7 @@ class UpdateBlogGUI:
             QMessageBox.warning(None, "Error", "You Must Login First")
             self.clear_update()
             return 0
-        
+    #clear data  
     def clear_update(self):
         self.old_id_text.setText("")
         self.new_id_text.setText("")

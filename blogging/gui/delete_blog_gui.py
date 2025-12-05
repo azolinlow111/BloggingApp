@@ -8,7 +8,7 @@ from blogging.exception.illegal_operation_exception import IllegalOperationExcep
 
 class DeleteBlogGUI:
     def __init__(self, controller):
-        # delete a blog
+        # delete a blog layout
         self.controller = controller
 
         self.delete_blog_layout = QGridLayout()
@@ -26,6 +26,7 @@ class DeleteBlogGUI:
         self.delete_blog_widget = QWidget()
         self.delete_blog_widget.setLayout(self.delete_blog_layout)
 
+    #delete blog when btn is clicked
     def delete_blog_btn_clicked(self):
         blog_to_delete = self.id_delete_blog_text.text()
 

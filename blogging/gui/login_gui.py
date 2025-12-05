@@ -31,6 +31,7 @@ class LoginGUI:
         self.login_widget = QWidget()
         self.login_widget.setLayout(self.login_layout)
 
+    #call login controller with input user and password 
     def login_btn_clicked(self): 
         username = self.username_text.text()
         password = self.password_text.text()
@@ -47,7 +48,7 @@ class LoginGUI:
         except DuplicateLoginException:
             QMessageBox.warning(None, "Login Error", "Cannot Login While Logged In")
             self.clear_login()
-
+    #clear text boxes
     def clear_login(self):
         self.username_text.setText("")
         self.password_text.setText("")

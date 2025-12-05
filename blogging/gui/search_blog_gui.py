@@ -7,7 +7,7 @@ class SearchBlogGUI:
     def __init__(self, controller):
         self.controller = controller
 
-        # search blog
+        # search blog layout
         self.search_blog_layout = QGridLayout()
 
         self.search_label = QLabel("Enter A ID")
@@ -27,6 +27,7 @@ class SearchBlogGUI:
         self.search_blog_widget = QWidget()
         self.search_blog_widget.setLayout(self.search_blog_layout)
 
+    #search blog 
     def search_b_btn_clicked(self):
         self.search_results.clear()
 

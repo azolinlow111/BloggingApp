@@ -53,7 +53,8 @@ class UpdatePostGUI:
         except IllegalAccessException: 
             QMessageBox.warning(None, "Error", "You Must Login First")
             self.clear_update()
-        
+    
+    #clear input box
     def clear_update(self):
         self.post_code.clear()
         self.post_new_title.clear()

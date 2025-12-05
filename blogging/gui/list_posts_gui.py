@@ -24,6 +24,7 @@ class ListPostGUI:
         self.list_posts_widget = QWidget()
         self.list_posts_widget.setLayout(self.list_posts_layout)
 
+    #display blogs
     def list_posts_btn_clicked(self): 
         self.list_posts.clear()
   

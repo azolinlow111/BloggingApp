@@ -10,7 +10,7 @@ class CreateBlogGUI:
     def __init__(self, controller):
         self.controller = controller
 
-        # creating blogs
+        # layout
         self.create_blog_layout = QGridLayout()
         
         self.id_label = QLabel("ID")
@@ -37,7 +37,8 @@ class CreateBlogGUI:
 
         self.create_blog_widget = QWidget()
         self.create_blog_widget.setLayout(self.create_blog_layout)
-
+    
+    #creates a new blog when button is clicked
     def create_new_blog_btn_clicked(self):
         id = self.id_text.text()
         name = self.name_text.text()
@@ -59,7 +60,8 @@ class CreateBlogGUI:
             QMessageBox.warning(None, "Error", "You Must Login First")
             self.clear_create_blog()
             return 0
-        
+    
+    #clear input boxes information
     def clear_create_blog(self):
         self.id_text.setText("")
         self.name_text.setText("")

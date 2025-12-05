@@ -30,6 +30,7 @@ class RetrieveBlogsGUI:
         self.retrieve_blogs_widget = QWidget()
         self.retrieve_blogs_widget.setLayout(self.retrieve_blogs_layout)
     
+    #create table and display it 
     def load_table(self): 
         
         self.retrieved_blogs.setModel(None)
