@@ -42,7 +42,7 @@ class UpdateBlogGUI:
         self.update_blog_widget = QWidget()
         self.update_blog_widget.setLayout(self.update_blog_layout)
 
-    #uodate blog 
+    #update blog 
     def update_blog_btn_clicked(self):
         old_id = self.old_id_text.text()
         id = self.new_id_text.text()
@@ -51,19 +51,26 @@ class UpdateBlogGUI:
         email = self.new_email_text.text()
 
         try: 
-            if self.controller.update_blog(old_id, id, name, url, email): 
-                QMessageBox.information(None, "Success", "Blog Updated Successfully!")
-                self.clear_update()
-                return 6
+            if all([old_id, id, name, url, email]):
+
+                if self.controller.update_blog(old_id, id, name, url, email): 
+                    QMessageBox.information(None, "Success", "Blog Updated Successfully!")
+                    self.clear_update()
+                    return 6
+                
+            else:
+                QMessageBox.warning(None, "Error", "You Must Fill All Fields")
 
         except IllegalOperationException: 
             QMessageBox.warning(None, "Error", "Could Not Update Blog.")
             self.clear_update()
             return 6
+        
         except IllegalAccessException:
             QMessageBox.warning(None, "Error", "You Must Login First")
             self.clear_update()
             return 0
+        
     #clear data  
     def clear_update(self):
         self.old_id_text.setText("")

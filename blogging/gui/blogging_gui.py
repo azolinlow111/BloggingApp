@@ -217,9 +217,13 @@ class BloggingGUI(QMainWindow):
         id = self.edit_id_text.text()
 
         try:
-            # see if we can set it as the current blog
-            if self.controller.set_current_blog(id) is not None:
-                self.stack.setCurrentIndex(9)
+            if all([id]):
+                # see if we can set it as the current blog
+                if self.controller.set_current_blog(id) is not None:
+                    self.stack.setCurrentIndex(9)
+
+            else:
+                QMessageBox.warning(self, "Error", "Please Enter An ID")
 
         # blog doesn't exist
         except IllegalOperationException:

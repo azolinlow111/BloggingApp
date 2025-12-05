@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QGridLayout, QPushButton, QWidget, QLabel, QTableView
+from PyQt6.QtWidgets import QGridLayout, QPushButton, QWidget, QLabel, QTableView, QMessageBox
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from blogging.controller import Controller 
 
@@ -44,8 +44,8 @@ class ListBlogsGUI:
             self.blogs_table.setModel(table) 
             self.blogs_table.resizeColumnsToContents()
             
-        except (NoCurrentBlogException, IllegalAccessException):
-                pass 
-            
-    
-    
+        except NoCurrentBlogException:
+            QMessageBox.warning(None, "Error", "Cannot List Posts Without Current Blog Selected")
+
+        except IllegalAccessException:
+            QMessageBox.warning(None, "Error", "You Must Login First")

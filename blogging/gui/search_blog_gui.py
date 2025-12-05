@@ -34,11 +34,14 @@ class SearchBlogGUI:
         id = self.search_text.text()
         blog = self.controller.search_blog(id)
 
-        if blog is not None: 
-            self.search_results.appendPlainText(str(blog))
-            self.search_text.setText("")
-        else: 
-            QMessageBox.warning(None, "Search Error", "Blog Does Not Exist")
-            self.search_text.setText("")
+        if all([id]):
 
-    
+            if blog is not None: 
+                self.search_results.appendPlainText(str(blog))
+                self.search_text.setText("")
+            else: 
+                QMessageBox.warning(None, "Search Error", "Blog Does Not Exist")
+                self.search_text.setText("")
+        else:
+            QMessageBox.warning(None, "Error", "Please Enter A Blog ID")
+        

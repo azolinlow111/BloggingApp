@@ -39,11 +39,15 @@ class AddPostGUI:
         text = self.post_text.text()
 
         try:
-           # create post
-           self.controller.create_post(title, text)
-           QMessageBox.information(None, "Success", "Post Created Successfully!")
-           self.post_text.setText("")
-           self.post_title.setText("")
+            if all([title, text]):
+                # create post
+                self.controller.create_post(title, text)
+                QMessageBox.information(None, "Success", "Post Created Successfully!")
+                self.post_text.setText("")
+                self.post_title.setText("")
+            
+            else:
+               QMessageBox.warning(None, "Add Post Error", "You Must Fill All Fields")
 
         # creation unsuccessful
         except NoCurrentBlogException:

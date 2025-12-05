@@ -36,10 +36,15 @@ class LoginGUI:
         username = self.username_text.text()
         password = self.password_text.text()
         
-        try: 
-            success = self.controller.login(username, password)
-            if success: 
-                return 1
+        try:
+            if all([username, password]):
+                success = self.controller.login(username, password)
+                if success: 
+                    return 1
+            else:
+                QMessageBox.warning(None, "Error", "You Must Fill All Fields")
+                return 0
+
         except InvalidLoginException: 
             QMessageBox.warning(None, "Login Error", "Not logged in correctly")
             self.clear_login()
@@ -48,6 +53,7 @@ class LoginGUI:
         except DuplicateLoginException:
             QMessageBox.warning(None, "Login Error", "Cannot Login While Logged In")
             self.clear_login()
+            
     #clear text boxes
     def clear_login(self):
         self.username_text.setText("")

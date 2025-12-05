@@ -28,13 +28,21 @@ class DeletePostGUI:
     #delete post 
     def delete_post_btn_clicked(self): 
         code = self.delete_post_code.text()
-        try: 
-            if self.controller.delete_post(int(code)): 
-                QMessageBox.information(None, "success", "Post Deleted Successfully!")
-            else: 
-                QMessageBox.warning(None, "failure", "Post Was Not Deleted Successfully")
+        try:
+            if all([code]):
+
+                if self.controller.delete_post(int(code)): 
+                    QMessageBox.information(None, "Success", "Post Deleted Successfully!")
+                else: 
+                    QMessageBox.warning(None, "Failure", "Post Was Not Deleted Successfully")
                 
-        except (NoCurrentBlogException, IllegalAccessException):
-                pass 
+            else:
+                QMessageBox.warning(None, "Error", "Please Enter A Code")
+
+        except NoCurrentBlogException:
+            QMessageBox.warning(None, "Error", "Cannot Delete Post Without Current Blog Selected")
+                
+        except IllegalAccessException:
+            QMessageBox.warning(None, "Error", "You Must Login First")
         
         self.delete_post_code.clear()

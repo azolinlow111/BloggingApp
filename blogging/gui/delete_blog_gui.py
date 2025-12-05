@@ -31,9 +31,14 @@ class DeleteBlogGUI:
         blog_to_delete = self.id_delete_blog_text.text()
 
         try:
-            if self.controller.delete_blog(blog_to_delete):
-                QMessageBox.information(None, "Success", "Blog Deleted Successfully!")
-                self.id_delete_blog_text.setText("")
+            if all([blog_to_delete]):
+                if self.controller.delete_blog(blog_to_delete):
+                    QMessageBox.information(None, "Success", "Blog Deleted Successfully!")
+                    self.id_delete_blog_text.setText("")
+                    return 7
+                
+            else:
+                QMessageBox.warning(None, "Error", "Please Enter An ID")
                 return 7
 
         except IllegalOperationException:

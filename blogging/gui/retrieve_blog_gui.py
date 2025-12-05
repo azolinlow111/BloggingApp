@@ -38,25 +38,29 @@ class RetrieveBlogsGUI:
         keyword = self.retrieve_blogs_text.text()
 
         blogs = self.controller.retrieve_blogs(keyword)
-        try:
-            if len(blogs) > 0:
-                table = QStandardItemModel(len(blogs), 4)
-                
-                table.setHorizontalHeaderLabels(["ID", "Name", "URL", "Email"])
-                
-                for row, blog, in enumerate(blogs): 
-                    table.setItem(row, 0, QStandardItem(str(blog.id)))
-                    table.setItem(row, 1, QStandardItem(blog.name))
-                    table.setItem(row, 2, QStandardItem(blog.url))
-                    table.setItem(row, 3, QStandardItem(blog.email))
-                
-                self.retrieved_blogs.setModel(table) 
-                self.retrieved_blogs.resizeColumnsToContents()
 
+        try:
+            if all([keyword]):
+                if len(blogs) > 0:
+                    table = QStandardItemModel(len(blogs), 4)
+                    
+                    table.setHorizontalHeaderLabels(["ID", "Name", "URL", "Email"])
+                    
+                    for row, blog, in enumerate(blogs): 
+                        table.setItem(row, 0, QStandardItem(str(blog.id)))
+                        table.setItem(row, 1, QStandardItem(blog.name))
+                        table.setItem(row, 2, QStandardItem(blog.url))
+                        table.setItem(row, 3, QStandardItem(blog.email))
+                    
+                    self.retrieved_blogs.setModel(table) 
+                    self.retrieved_blogs.resizeColumnsToContents()
+
+                else:
+                    QMessageBox.warning(None, "Error", "No matching Blogs")
+                    self.retrieve_blogs_text.setText("")
+            
             else:
-                QMessageBox.warning(None, "Error", "No matching Blogs")
-                self.retrieve_blogs_text.setText("")
+                QMessageBox.warning(None, "Error", "Please Enter A Keyword")
                 
         except IllegalAccessException:
-            QMessageBox.warning(self, "Error", "You Must Login First")
-            self.stack.setCurrentIndex(0)
+            QMessageBox.warning(None, "Error", "You Must Login First")

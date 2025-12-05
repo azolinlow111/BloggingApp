@@ -33,16 +33,23 @@ class RetrievePostGUI:
         self.post_retrieved.clear()
         keyword = self.post_keyword.text()
 
-        try: 
-            post_li = self.controller.retrieve_posts(keyword)
+        try:
+            if all([keyword]):
+                post_li = self.controller.retrieve_posts(keyword)
 
-            if len(post_li) > 0: 
-                for post in post_li: 
-                    self.post_retrieved.appendPlainText(str(post))
-            else: 
-                QMessageBox.warning(None, "Error", "No matching Posts")
+                if len(post_li) > 0: 
+                    for post in post_li: 
+                        self.post_retrieved.appendPlainText(str(post))
+                else: 
+                    QMessageBox.warning(None, "Error", "No matching Posts")
+            
+            else:
+                QMessageBox.warning(None, "Error", "Please Enter A Keyword")
 
-        except (NoCurrentBlogException, IllegalAccessException):
-            pass
+        except NoCurrentBlogException:
+            QMessageBox.warning(None, "Error", "Cannot Delete Post Without Current Blog Selected")
+            
+        except IllegalAccessException:
+            QMessageBox.warning(None, "Error", "You Must Login First")
         
         self.post_keyword.clear()

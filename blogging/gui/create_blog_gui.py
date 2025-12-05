@@ -46,9 +46,15 @@ class CreateBlogGUI:
         email = self.email_text.text()
 
         try: 
-            if self.controller.create_blog(id, name, url, email): 
-                QMessageBox.information(None, "Success", "Blog Created Successfully!")
-                self.clear_create_blog()
+            if all([id, name, url, email]):
+
+                if self.controller.create_blog(id, name, url, email): 
+                    QMessageBox.information(None, "Success", "Blog Created Successfully!")
+                    self.clear_create_blog()
+                    return 3
+
+            else:
+                QMessageBox.warning(None, "Error", "You Must Fill All Fields")
                 return 3
 
         except IllegalOperationException: 

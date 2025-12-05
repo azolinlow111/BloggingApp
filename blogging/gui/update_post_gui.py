@@ -40,16 +40,20 @@ class UpdatePostGUI:
         text = self.post_new_text.text()
         
         try:
-            if self.controller.search_post(int(code)) is not None:
-                self.controller.update_post(int(code), title, text)
-                QMessageBox.information(None, "Success", "Post Updated Successfully!")
-                self.clear_update()
+            if all([code, title, text]):
+                if self.controller.search_post(int(code)) is not None:
+                    self.controller.update_post(int(code), title, text)
+                    QMessageBox.information(None, "Success", "Post Updated Successfully!")
+                    self.clear_update()
+                else:
+                    QMessageBox.warning(None, "Update Post Error", "Cannot Update a Post that Doesn't Exist")
             else:
-                QMessageBox.warning(None, "Update Post Error", "Cannot Update a Post that Doesn't Exist")
-        
+                QMessageBox.warning(None, "Error", "You Must Fill All Fields")
+
         except NoCurrentBlogException:
             QMessageBox.warning(None, "Update Post Error", "Cannot Update Post Without Blog Selected") 
             self.clear_update()
+            
         except IllegalAccessException: 
             QMessageBox.warning(None, "Error", "You Must Login First")
             self.clear_update()
