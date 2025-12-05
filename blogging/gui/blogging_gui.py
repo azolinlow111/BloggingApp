@@ -186,7 +186,7 @@ class BloggingGUI(QMainWindow):
         # set current window to login screen
         self.stack.setCurrentIndex(0)
 
-#----- LOGIN/LOGOUT ----
+    # --- LOGIN/LOGOUT ---
     def login_btn_clicked(self): 
         i = self.login_gui.login_btn_clicked()
 
@@ -200,23 +200,31 @@ class BloggingGUI(QMainWindow):
     def quit_btn_clicked(self): 
         self.close()
 
-#---- BLOG FUNCTIONS ------ 
+    # --- GO BACK BUTTON ---
+    def go_back_btn_clicked(self):
+        self.stack.setCurrentIndex(1)
 
+    # --- BLOG FUNCTIONS --- 
+    # --- EDIT BLOG ---
     def edit_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(8)
         self.edit_blog_btn.clicked.connect(self.edit_blog_btn_clicked)
 
+    # edit a blog based on ID
     def edit_blog_btn_clicked(self):
         id = self.edit_id_text.text()
 
         try:
+            # see if we can set it as the current blog
             if self.controller.set_current_blog(id) is not None:
                 self.stack.setCurrentIndex(9)
 
+        # blog doesn't exist
         except IllegalOperationException:
             QMessageBox.warning(self, "Error", "Could Not Find Blog.")
             self.edit_id_text.setText("")
 
+        # user not logged in
         except IllegalAccessException:
             QMessageBox.warning(self, "Error", "You Must Login First")
             self.edit_id_text.setText("")
@@ -224,6 +232,7 @@ class BloggingGUI(QMainWindow):
         
         self.edit_id_text.clear()
 
+    # --- UPDATE BLOG ---
     def update_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(6)
         self.update_blog_gui.update_blog_btn.clicked.connect(self.update_blog_gui.update_blog_btn_clicked)
@@ -233,20 +242,19 @@ class BloggingGUI(QMainWindow):
 
         self.stack.setCurrentIndex(i)
 
+    # --- SEARCH BLOG ---
     def search_blog_btn_clicked_main(self): 
         self.stack.setCurrentIndex(4)
         self.search_blog_gui.search_results.clear()
         self.search_blog_gui.search_b_btn.clicked.connect(self.search_blog_gui.search_b_btn_clicked)
 
+    # --- RETRIEVE BLOG ---
     def retrieve_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(5)
         self.retrieve_blogs_gui.retrieved_blogs.setModel(None)
         self.retrieve_blogs_gui.retrieve_blogs_text.clear()
-        
-   
-    def go_back_btn_clicked(self):
-        self.stack.setCurrentIndex(1)
     
+    # --- DELETE BLOGS ---
     def delete_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(7)
         self.delete_blog_gui.delete_blog_btn.clicked.connect(self.delete_blog_gui.delete_blog_btn_clicked)
@@ -256,6 +264,7 @@ class BloggingGUI(QMainWindow):
 
         self.stack.setCurrentIndex(i)
 
+    # --- CREATE BLOG ---
     def create_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(3)
         self.create_blog_gui.create_new_blog_btn.clicked.connect(self.create_new_blog_btn_clicked)
@@ -264,11 +273,12 @@ class BloggingGUI(QMainWindow):
         i = self.create_blog_gui.create_new_blog_btn_clicked()
         self.stack.setCurrentIndex(i)
 
+    # --- LIST ALL BLOGS ---
     def list_all_blogs_btn_clicked(self):
         self.stack.setCurrentIndex(2)
         self.list_blogs_gui.load_table()
   
-  # ----- POST FUNCTIONS -----
+    # --- POST FUNCTIONS ---
   
     #changes layout to index
     def post_menu_btn_clicked(self, index): 

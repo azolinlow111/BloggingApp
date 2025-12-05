@@ -50,7 +50,8 @@ class AddPostGUI:
             QMessageBox.warning(None, "Add Post Error", "Cannot Add Post Without Blog Selected") 
             self.post_text.setText("")
             self.post_title.setText("")
-            
+        
+        # user not logged in
         except IllegalAccessException: 
             QMessageBox.warning(None, "Error", "You Must Login First")
             self.post_text.setText("")

@@ -41,7 +41,7 @@ class RetrieveBlogsGUI:
             if len(blogs) > 0:
                 table = QStandardItemModel(len(blogs), 4)
                 
-                table.setHorizontalHeaderLabels(["Id", "Name", "url", "email"])
+                table.setHorizontalHeaderLabels(["ID", "Name", "URL", "Email"])
                 
                 for row, blog, in enumerate(blogs): 
                     table.setItem(row, 0, QStandardItem(str(blog.id)))

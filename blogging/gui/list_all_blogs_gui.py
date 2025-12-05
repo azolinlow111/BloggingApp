@@ -12,7 +12,6 @@ class ListBlogsGUI:
     
         self.controller = controller 
         
-        
         #listing blogs layout 
         self.list_blogs_layout = QGridLayout()
         self.blogs_table = QTableView()
@@ -26,7 +25,6 @@ class ListBlogsGUI:
         #Adding widget 
         self.list_blogs_widget = QWidget()
         self.list_blogs_widget.setLayout(self.list_blogs_layout)
-
     
     def load_table(self): 
         
@@ -34,7 +32,7 @@ class ListBlogsGUI:
             blogs = self.controller.list_blogs()
             
             table = QStandardItemModel(len(blogs), 4)
-            table.setHorizontalHeaderLabels(["Id", "Name", "url", "email"])
+            table.setHorizontalHeaderLabels(["ID", "Name", "URL", "Email"])
             
             for row, blog, in enumerate(blogs): 
                 table.setItem(row, 0, QStandardItem(str(blog.id)))
