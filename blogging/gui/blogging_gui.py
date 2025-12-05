@@ -15,6 +15,7 @@ from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 from blogging.gui.post_gui import PostGUI
 from blogging.gui.login_gui import LoginGUI
+from blogging.gui.delete_blog_gui import DeleteBlogGUI
 
 class BloggingGUI(QMainWindow):
 
@@ -27,6 +28,7 @@ class BloggingGUI(QMainWindow):
         
         self.login_gui = LoginGUI(self.controller)
         self.post_gui = PostGUI(self.controller)
+        self.delete_blog_gui = DeleteBlogGUI(self.controller)
         
         self.setWindowTitle("Blogging System")
 
@@ -152,18 +154,7 @@ class BloggingGUI(QMainWindow):
 
         self.retrieved_blogs.setEnabled(False)
 
-        # delete a blog
-        self.delete_blog_layout = QGridLayout()
-
-        self.id_delete_blog_label = QLabel("Enter the ID of the Blog")
-        self.id_delete_blog_text = QLineEdit()
-        self.delete_blog_btn = QPushButton("Delete")
-        self.go_back_btn6 = QPushButton("Go Back to Main Menu")
-
-        self.delete_blog_layout.addWidget(self.id_delete_blog_label, 0,0)
-        self.delete_blog_layout.addWidget(self.id_delete_blog_text, 0,1)
-        self.delete_blog_layout.addWidget(self.delete_blog_btn,0,2)
-        self.delete_blog_layout.addWidget(self.go_back_btn6, 1,1)
+        
 
         # start editing a blog, ID screen
         self.edit_blog_layout1 = QGridLayout()
@@ -220,9 +211,6 @@ class BloggingGUI(QMainWindow):
         self.update_blog_widget = QWidget()
         self.update_blog_widget.setLayout(self.update_blog_layout)
 
-        self.delete_blog_widget = QWidget()
-        self.delete_blog_widget.setLayout(self.delete_blog_layout)
-
         self.edit_blog_widget1 = QWidget()
         self.edit_blog_widget1.setLayout(self.edit_blog_layout1)
 
@@ -238,7 +226,7 @@ class BloggingGUI(QMainWindow):
         self.stack.addWidget(self.search_blog_widget) # 4
         self.stack.addWidget(self.retrieve_blogs_widget) # 5
         self.stack.addWidget(self.update_blog_widget) # 6
-        self.stack.addWidget(self.delete_blog_widget) # 7
+        self.stack.addWidget(self.delete_blog_gui.delete_blog_widget) # 7
         self.stack.addWidget(self.edit_blog_widget1) # 8
         self.stack.addWidget(self.post_menu_widget) # 9
         self.stack.addWidget(self.post_gui.add_post_widget) #10
@@ -276,7 +264,7 @@ class BloggingGUI(QMainWindow):
         self.go_back_btn3.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn4.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn5.clicked.connect(self.go_back_btn_clicked)
-        self.go_back_btn6.clicked.connect(self.go_back_btn_clicked)
+        self.delete_blog_gui.go_back_btn6.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn7.clicked.connect(self.go_back_btn_clicked)
         self.finish_editing_btn_main.clicked.connect(self.go_back_btn_clicked)
         
@@ -329,24 +317,12 @@ class BloggingGUI(QMainWindow):
 
     def delete_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(7)
-        self.delete_blog_btn.clicked.connect(self.delete_blog_btn_clicked)
+        self.delete_blog_gui.delete_blog_btn.clicked.connect(self.delete_blog_gui.delete_blog_btn_clicked)
 
     def delete_blog_btn_clicked(self):
-        blog_to_delete = self.id_delete_blog_text.text()
+        i = self.delete_blog_gui.delete_blog_btn_clicked()
 
-        try:
-            if self.controller.delete_blog(blog_to_delete):
-                QMessageBox.information(self, "Success", "Blog Deleted Successfully!")
-                self.id_delete_blog_text.setText("")
-
-        except IllegalOperationException:
-            QMessageBox.warning(self, "Error", "Could Not Delete Blog.")
-            self.id_delete_blog_text.setText("")
-
-        except IllegalAccessException:
-            QMessageBox.warning(self, "Error", "You Must Login First")
-            self.id_delete_blog_text.setText("")
-            self.stack.setCurrentIndex(0)
+        self.stack.setCurrentIndex(i)
 
     def update_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(6)
