@@ -4,7 +4,6 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication, QMainWindow, QGridLayout, QPushButton, QWidget, QLabel, QLineEdit, QMessageBox, QStackedWidget, QPlainTextEdit
 from blogging.controller import Controller 
 
-
 from blogging.exception.invalid_login_exception import InvalidLoginException
 from blogging.exception.duplicate_login_exception import DuplicateLoginException
 from blogging.exception.invalid_logout_exception import InvalidLogoutException
@@ -12,13 +11,16 @@ from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
-
-from blogging.gui.post_gui import PostGUI
 from blogging.gui.login_gui import LoginGUI
 from blogging.gui.delete_blog_gui import DeleteBlogGUI
 from blogging.gui.create_blog_gui import CreateBlogGUI
 from blogging.gui.search_blog_gui import SearchBlogGUI
 from blogging.gui.update_blog_gui import UpdateBlogGUI
+from blogging.gui.add_post_gui import AddPostGUI
+from blogging.gui.delete_post_gui import DeletePostGUI
+from blogging.gui.retrieve_post_gui import RetrievePostGUI
+from blogging.gui.update_post_gui import UpdatePostGUI
+from blogging.gui.list_posts_gui import ListPostGUI
 
 class BloggingGUI(QMainWindow):
 
@@ -30,11 +32,15 @@ class BloggingGUI(QMainWindow):
         self.controller = Controller()
         
         self.login_gui = LoginGUI(self.controller)
-        self.post_gui = PostGUI(self.controller)
         self.delete_blog_gui = DeleteBlogGUI(self.controller)
         self.create_blog_gui = CreateBlogGUI(self.controller)
         self.search_blog_gui = SearchBlogGUI(self.controller)
         self.update_blog_gui = UpdateBlogGUI(self.controller)
+        self.add_post_gui = AddPostGUI(self.controller)
+        self.delete_post_gui = DeletePostGUI(self.controller)
+        self.retrieve_post_gui = RetrievePostGUI(self.controller)
+        self.update_post_gui = UpdatePostGUI(self.controller)
+        self.list_posts_gui = ListPostGUI(self.controller)
         
         self.setWindowTitle("Blogging System")
 
@@ -103,7 +109,6 @@ class BloggingGUI(QMainWindow):
         self.edit_blog_layout1.addWidget(self.go_back_btn7, 1,1)
 
         # post menu layout
-
         self.post_menu_layout = QGridLayout()
 
         self.post_menu_label = QLabel("Please Select an Option")
@@ -149,11 +154,11 @@ class BloggingGUI(QMainWindow):
         self.stack.addWidget(self.delete_blog_gui.delete_blog_widget) # 7
         self.stack.addWidget(self.edit_blog_widget1) # 8
         self.stack.addWidget(self.post_menu_widget) # 9
-        self.stack.addWidget(self.post_gui.add_post_widget) #10
-        self.stack.addWidget(self.post_gui.retrieve_post_widget) #11
-        self.stack.addWidget(self.post_gui.update_post_widget) #12
-        self.stack.addWidget(self.post_gui.delete_post_widget) #13
-        self.stack.addWidget(self.post_gui.list_posts_widget) #14
+        self.stack.addWidget(self.add_post_gui.add_post_widget) #10
+        self.stack.addWidget(self.retrieve_post_gui.retrieve_post_widget) #11
+        self.stack.addWidget(self.update_post_gui.update_post_widget) #12
+        self.stack.addWidget(self.delete_post_gui.delete_post_widget) #13
+        self.stack.addWidget(self.list_posts_gui.list_posts_widget) #14
 
         self.setCentralWidget(self.stack)
 
@@ -169,13 +174,13 @@ class BloggingGUI(QMainWindow):
         self.edit_blog_btn_main.clicked.connect(self.edit_blog_btn_clicked_main)
         
         self.add_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(10))
-        self.post_gui.add_post_btn.clicked.connect(self.post_gui.add_post_btn_clicked)
+        self.add_post_gui.add_post_btn.clicked.connect(self.add_post_gui.add_post_btn_clicked)
         self.retrieve_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(11))
-        self.post_gui.retrieve_post_btn.clicked.connect(self.post_gui.retrieve_post_btn_clicked)
+        self.retrieve_post_gui.retrieve_post_btn.clicked.connect(self.retrieve_post_gui.retrieve_post_btn_clicked)
         self.update_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(12))
-        self.post_gui.update_post_btn.clicked.connect(self.post_gui.update_post_btn_clicked)
+        self.update_post_gui.update_post_btn.clicked.connect(self.update_post_gui.update_post_btn_clicked)
         self.delete_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(13))
-        self.post_gui.delete_post_btn.clicked.connect(self.post_gui.delete_post_btn_clicked)
+        self.delete_post_gui.delete_post_btn.clicked.connect(self.delete_post_gui.delete_post_btn_clicked)
         self.list_all_posts_btn_main.clicked.connect(self.list_posts_btn_clicked)
 
         # go back buttons
@@ -188,11 +193,11 @@ class BloggingGUI(QMainWindow):
         self.go_back_btn7.clicked.connect(self.go_back_btn_clicked)
         self.finish_editing_btn_main.clicked.connect(self.go_back_btn_clicked)
         
-        self.post_gui.go_back_btn_posts1.clicked.connect(self.go_back_btn_posts_clicked)
-        self.post_gui.go_back_btn_posts2.clicked.connect(self.go_back_btn_posts_clicked)
-        self.post_gui.go_back_btn_posts3.clicked.connect(self.go_back_btn_posts_clicked)
-        self.post_gui.go_back_btn_posts4.clicked.connect(self.go_back_btn_posts_clicked)
-        self.post_gui.go_back_btn_posts5.clicked.connect(self.go_back_btn_posts_clicked)
+        self.add_post_gui.go_back_btn_posts1.clicked.connect(self.go_back_btn_posts_clicked)
+        self.retrieve_post_gui.go_back_btn_posts2.clicked.connect(self.go_back_btn_posts_clicked)
+        self.update_post_gui.go_back_btn_posts3.clicked.connect(self.go_back_btn_posts_clicked)
+        self.delete_post_gui.go_back_btn_posts4.clicked.connect(self.go_back_btn_posts_clicked)
+        self.list_posts_gui.go_back_btn_posts5.clicked.connect(self.go_back_btn_posts_clicked)
         
         self.stack.setCurrentIndex(0)
 
@@ -204,8 +209,7 @@ class BloggingGUI(QMainWindow):
 
     def logout_btn_clicked(self):
         self.controller.logout()
-
-        self.clear_login()
+        self.login_gui.clear_login()
         self.stack.setCurrentIndex(0)
 
     def quit_btn_clicked(self): 
@@ -234,8 +238,6 @@ class BloggingGUI(QMainWindow):
             self.stack.setCurrentIndex(0)
         
         self.edit_id_text.clear()
-
-    
 
     def update_blog_btn_clicked_main(self):
         self.stack.setCurrentIndex(6)
@@ -314,19 +316,10 @@ class BloggingGUI(QMainWindow):
     def go_back_btn_posts_clicked(self): 
         self.stack.setCurrentIndex(9)
         
-        #list posts 
+    #list posts 
     def list_posts_btn_clicked(self): 
-  
-        self.post_gui.list_posts.clear()
-        self.stack.setCurrentIndex(14)
-        try: 
-            posts = self.controller.list_posts()
-            for post in posts: 
-                self.post_gui.list_posts.appendPlainText(str(post))
-        except (NoCurrentBlogException, IllegalAccessException):
-            pass
-            
         
+        self.stack.setCurrentIndex(14)
 
 def main():
     app = QApplication(sys.argv)

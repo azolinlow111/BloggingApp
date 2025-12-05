@@ -12,11 +12,6 @@ from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
-
-from blogging.gui.post_gui import PostGUI
-from blogging.gui.login_gui import LoginGUI
-from blogging.gui.delete_blog_gui import DeleteBlogGUI
-
 class CreateBlogGUI:
     def __init__(self, controller):
         self.controller = controller
