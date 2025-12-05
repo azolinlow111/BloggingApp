@@ -43,6 +43,7 @@ class LoginGUI:
         except InvalidLoginException: 
             QMessageBox.warning(None, "Login Error", "Not logged in correctly")
             self.clear_login()
+            return 0
 
         except DuplicateLoginException:
             QMessageBox.warning(None, "Login Error", "Cannot Login While Logged In")
