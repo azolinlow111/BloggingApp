@@ -1,15 +1,11 @@
 import sys
 from blogging.configuration import Configuration
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QMainWindow, QGridLayout, QPushButton, QWidget, QLabel, QLineEdit, QMessageBox, QStackedWidget, QPlainTextEdit
+from PyQt6.QtWidgets import QApplication, QMainWindow, QGridLayout, QPushButton, QWidget, QLabel, QLineEdit, QMessageBox, QStackedWidget
 from blogging.controller import Controller 
 
-from blogging.exception.invalid_login_exception import InvalidLoginException
-from blogging.exception.duplicate_login_exception import DuplicateLoginException
-from blogging.exception.invalid_logout_exception import InvalidLogoutException
 from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
-from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 from blogging.gui.retrieve_blog_gui import RetrieveBlogsGUI
 from blogging.gui.list_all_blogs_gui import ListBlogsGUI
@@ -18,6 +14,11 @@ from blogging.gui.delete_blog_gui import DeleteBlogGUI
 from blogging.gui.create_blog_gui import CreateBlogGUI
 from blogging.gui.search_blog_gui import SearchBlogGUI
 from blogging.gui.update_blog_gui import UpdateBlogGUI
+from blogging.gui.add_post_gui import AddPostGUI
+from blogging.gui.delete_post_gui import DeletePostGUI
+from blogging.gui.retrieve_post_gui import RetrievePostGUI
+from blogging.gui.update_post_gui import UpdatePostGUI
+from blogging.gui.list_posts_gui import ListPostGUI
 
 class BloggingGUI(QMainWindow):
 

@@ -1,12 +1,8 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QMainWindow, QGridLayout, QPushButton, QWidget, QLabel, QLineEdit, QMessageBox, QStackedWidget, QPlainTextEdit
+from PyQt6.QtWidgets import QGridLayout, QPushButton, QWidget, QLabel, QLineEdit, QMessageBox
 from blogging.controller import Controller 
 
-from blogging.exception.invalid_login_exception import InvalidLoginException
-from blogging.exception.duplicate_login_exception import DuplicateLoginException
-from blogging.exception.invalid_logout_exception import InvalidLogoutException
 from blogging.exception.illegal_access_exception import IllegalAccessException
-from blogging.exception.illegal_operation_exception import IllegalOperationException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 class AddPostGUI:
@@ -44,7 +40,12 @@ class AddPostGUI:
            self.post_text.setText("")
            self.post_title.setText("")
 
-        except (NoCurrentBlogException, IllegalAccessException): 
-           QMessageBox.warning(None, "Create Post Error", "Cannot Create Post Properly")
-           self.post_text.setText("")
-           self.post_title.setText("")
+        except NoCurrentBlogException:
+            QMessageBox.warning(None, "Add Post Error", "Cannot Add Post Without Blog Selected") 
+            self.post_text.setText("")
+            self.post_title.setText("")
+        except IllegalAccessException: 
+            QMessageBox.warning(None, "Error", "You Must Login First")
+            self.post_text.setText("")
+            self.post_title.setText("")
+           

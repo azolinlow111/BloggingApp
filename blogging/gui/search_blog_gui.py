@@ -1,16 +1,7 @@
 import sys
-from blogging.configuration import Configuration
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QMainWindow, QGridLayout, QPushButton, QWidget, QLabel, QLineEdit, QMessageBox, QStackedWidget, QPlainTextEdit
+from PyQt6.QtWidgets import QGridLayout, QPushButton, QWidget, QLabel, QLineEdit, QMessageBox, QPlainTextEdit
 from blogging.controller import Controller 
-
-
-from blogging.exception.invalid_login_exception import InvalidLoginException
-from blogging.exception.duplicate_login_exception import DuplicateLoginException
-from blogging.exception.invalid_logout_exception import InvalidLogoutException
-from blogging.exception.illegal_access_exception import IllegalAccessException
-from blogging.exception.illegal_operation_exception import IllegalOperationException
-from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
 class SearchBlogGUI:
     def __init__(self, controller):
