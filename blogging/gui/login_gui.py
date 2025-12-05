@@ -31,7 +31,6 @@ class LoginGUI:
         self.login_widget = QWidget()
         self.login_widget.setLayout(self.login_layout)
 
-
     def login_btn_clicked(self): 
         username = self.username_text.text()
         password = self.password_text.text()
