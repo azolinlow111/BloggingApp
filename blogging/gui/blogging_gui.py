@@ -11,6 +11,9 @@ from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
 
+
+from blogging.gui.post_gui import PostGUI
+
 class BloggingGUI(QMainWindow):
 
     def __init__(self):
@@ -19,9 +22,11 @@ class BloggingGUI(QMainWindow):
         self.configuration = Configuration()
         self.configuration.__class__.autosave = True
         self.controller = Controller()
-
+        
+        self.post_gui = PostGUI(self.controller)
+        
         self.setWindowTitle("Blogging System")
-
+        
         
         
         login_layout = QGridLayout()
@@ -210,86 +215,7 @@ class BloggingGUI(QMainWindow):
         self.post_menu_layout.addWidget(self.delete_post_btn_main, 4,0)
         self.post_menu_layout.addWidget(self.list_all_posts_btn_main, 5,0)
         self.post_menu_layout.addWidget(self.finish_editing_btn_main, 6,0)
-        
-        #add post layout 
-        self.add_post_layout = QGridLayout()
-        
-        self.post_title_label = QLabel("Add Post Title")
-        self.post_title = QLineEdit()
-        self.post_text_label = QLabel("Add Post Text")
-        self.post_text = QLineEdit()
-        self.add_post_btn = QPushButton("Create New Post")
-        self.go_back_btn_posts1 = QPushButton("Go Back To Post Menu")
-        
-        self.add_post_layout.addWidget(self.post_title_label, 0,0)
-        self.add_post_layout.addWidget(self.post_title, 0,1)
-        self.add_post_layout.addWidget(self.post_text_label, 1,0)
-        self.add_post_layout.addWidget(self.post_text, 1,1)
-        self.add_post_layout.addWidget(self.add_post_btn, 2,1)
-        self.add_post_layout.addWidget(self.go_back_btn_posts1,2,0)
-        
-        #retrieve post layout 
-        self.retrieve_post_layout = QGridLayout() 
-        
-        self.post_keyword_label = QLabel("Search Post By Text")
-        self.post_keyword = QLineEdit()
-        self.retrieve_post_btn = QPushButton("Search") 
-        self.post_retrieved = QPlainTextEdit()
-        self.post_retrieved.setEnabled(False) 
-        self.go_back_btn_posts2 = QPushButton("Go Back To Post Menu")
-        
-        self.retrieve_post_layout.addWidget(self.post_keyword_label, 0,0)
-        self.retrieve_post_layout.addWidget(self.post_keyword, 0,1)        
-        self.retrieve_post_layout.addWidget(self.retrieve_post_btn, 0,2)
-        self.retrieve_post_layout.addWidget(self.post_retrieved, 1,0) 
-        self.retrieve_post_layout.addWidget(self.go_back_btn_posts2,2,0)
-        
-        #update post layout 
-        self.update_post_layout = QGridLayout()
-        
-        self.post_code_label = QLabel("Enter Code")
-        self.post_code = QLineEdit()
-        self.post_new_title_label = QLabel("New Title")
-        self.post_new_title = QLineEdit()
-        self.post_new_text_label = QLabel("New Text")
-        self.post_new_text = QLineEdit()
-        self.update_post_btn = QPushButton("Update")
-        self.go_back_btn_posts3 = QPushButton("Go Back To Post Menu")
-        
-        self.update_post_layout.addWidget(self.post_code_label, 0,0)
-        self.update_post_layout.addWidget(self.post_code, 0,1)
-        self.update_post_layout.addWidget(self.post_new_title_label, 1,0)
-        self.update_post_layout.addWidget(self.post_new_title, 1,1)
-        self.update_post_layout.addWidget(self.post_new_text_label, 2,0)
-        self.update_post_layout.addWidget(self.post_new_text, 2,1)
-        self.update_post_layout.addWidget(self.go_back_btn_posts3,3,0)
-        self.update_post_layout.addWidget(self.update_post_btn,3,1)
-        
-        #delete post layout 
-        self.delete_post_layout = QGridLayout() 
-        
-        self.delete_post_code_label = QLabel("Enter Code")
-        self.delete_post_code = QLineEdit()
-        self.delete_post_btn = QPushButton("Delete")
-        self.go_back_btn_posts4 = QPushButton("Go Back To Post Menu")
-        
-        self.delete_post_layout.addWidget(self.delete_post_code_label, 0,0)
-        self.delete_post_layout.addWidget(self.delete_post_code, 0,1)
-        self.delete_post_layout.addWidget(self.delete_post_btn, 1,1)
-        self.delete_post_layout.addWidget(self.go_back_btn_posts4,1,0)
-        
-        #list posts layout 
-        self.list_posts_layout = QGridLayout() 
-        
-        self.list_posts_label = QLabel("Posts")
-        self.list_posts = QPlainTextEdit()
-        self.list_posts.setEnabled(False) 
-        self.go_back_btn_posts5 = QPushButton("Go Back To Post Menu")
-        
-        self.list_posts_layout.addWidget(self.list_posts_label, 0,0)
-        self.list_posts_layout.addWidget(self.list_posts, 1,0)
-        self.list_posts_layout.addWidget(self.go_back_btn_posts5, 2,0)
-        
+
         # set widgets
         self.login_widget = QWidget()
         self.login_widget.setLayout(login_layout)
@@ -320,22 +246,8 @@ class BloggingGUI(QMainWindow):
 
         self.post_menu_widget = QWidget()
         self.post_menu_widget.setLayout(self.post_menu_layout)
-        
-        self.add_post_widget = QWidget()
-        self.add_post_widget.setLayout(self.add_post_layout)
-        
-        self.retrieve_post_widget = QWidget()
-        self.retrieve_post_widget.setLayout(self.retrieve_post_layout)
-        
-        self.update_post_widget = QWidget()
-        self.update_post_widget.setLayout(self.update_post_layout)
-        
-        self.delete_post_widget = QWidget()
-        self.delete_post_widget.setLayout(self.delete_post_layout)
-        
-        self.list_posts_widget = QWidget()
-        self.list_posts_widget.setLayout(self.list_posts_layout)
-
+    
+   
         self.stack = QStackedWidget()
         self.stack.addWidget(self.login_widget) # 0
         self.stack.addWidget(self.main_widget) # 1
@@ -347,11 +259,11 @@ class BloggingGUI(QMainWindow):
         self.stack.addWidget(self.delete_blog_widget) # 7
         self.stack.addWidget(self.edit_blog_widget1) # 8
         self.stack.addWidget(self.post_menu_widget) # 9
-        self.stack.addWidget(self.add_post_widget) #10
-        self.stack.addWidget(self.retrieve_post_widget) #11
-        self.stack.addWidget(self.update_post_widget) #12
-        self.stack.addWidget(self.delete_post_widget) #13
-        self.stack.addWidget(self.list_posts_widget) #14
+        self.stack.addWidget(self.post_gui.add_post_widget) #10
+        self.stack.addWidget(self.post_gui.retrieve_post_widget) #11
+        self.stack.addWidget(self.post_gui.update_post_widget) #12
+        self.stack.addWidget(self.post_gui.delete_post_widget) #13
+        self.stack.addWidget(self.post_gui.list_posts_widget) #14
 
         self.setCentralWidget(self.stack)
 
@@ -365,14 +277,15 @@ class BloggingGUI(QMainWindow):
         self.update_blog_btn_main.clicked.connect(self.update_blog_btn_clicked_main)
         self.delete_blog_btn_main.clicked.connect(self.delete_blog_btn_clicked_main)
         self.edit_blog_btn_main.clicked.connect(self.edit_blog_btn_clicked_main)
+        
         self.add_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(10))
-        self.add_post_btn.clicked.connect(self.add_post_btn_clicked)
+        self.post_gui.add_post_btn.clicked.connect(self.post_gui.add_post_btn_clicked)
         self.retrieve_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(11))
-        self.retrieve_post_btn.clicked.connect(self.retrieve_post_btn_clicked)
+        self.post_gui.retrieve_post_btn.clicked.connect(self.post_gui.retrieve_post_btn_clicked)
         self.update_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(12))
-        self.update_post_btn.clicked.connect(self.update_post_btn_clicked)
+        self.post_gui.update_post_btn.clicked.connect(self.post_gui.update_post_btn_clicked)
         self.delete_post_btn_main.clicked.connect(lambda: self.post_menu_btn_clicked(13))
-        self.delete_post_btn.clicked.connect(self.delete_post_btn_clicked)
+        self.post_gui.delete_post_btn.clicked.connect(self.post_gui.delete_post_btn_clicked)
         self.list_all_posts_btn_main.clicked.connect(self.list_posts_btn_clicked)
 
         # go back buttons
@@ -385,11 +298,11 @@ class BloggingGUI(QMainWindow):
         self.go_back_btn7.clicked.connect(self.go_back_btn_clicked)
         self.finish_editing_btn_main.clicked.connect(self.go_back_btn_clicked)
         
-        self.go_back_btn_posts1.clicked.connect(self.go_back_btn_posts_clicked)
-        self.go_back_btn_posts2.clicked.connect(self.go_back_btn_posts_clicked)
-        self.go_back_btn_posts3.clicked.connect(self.go_back_btn_posts_clicked)
-        self.go_back_btn_posts4.clicked.connect(self.go_back_btn_posts_clicked)
-        self.go_back_btn_posts5.clicked.connect(self.go_back_btn_posts_clicked)
+        self.post_gui.go_back_btn_posts1.clicked.connect(self.go_back_btn_posts_clicked)
+        self.post_gui.go_back_btn_posts2.clicked.connect(self.go_back_btn_posts_clicked)
+        self.post_gui.go_back_btn_posts3.clicked.connect(self.go_back_btn_posts_clicked)
+        self.post_gui.go_back_btn_posts4.clicked.connect(self.go_back_btn_posts_clicked)
+        self.post_gui.go_back_btn_posts5.clicked.connect(self.go_back_btn_posts_clicked)
         
         self.stack.setCurrentIndex(0)
 
@@ -593,84 +506,21 @@ class BloggingGUI(QMainWindow):
     #go back to post editing options
     def go_back_btn_posts_clicked(self): 
         self.stack.setCurrentIndex(9)
-   
-   #takes user input and creates a post in current_blog 
-    def add_post_btn_clicked(self): 
-       title = self.post_title.text()
-       text = self.post_text.text()
-       try: 
-           self.controller.create_post(title, text)
-           QMessageBox.information(self, "success", "Post Created Successfully!")
-           self.post_text.setText("")
-           self.post_title.setText("")
-       except (NoCurrentBlogException, IllegalAccessException): 
-           QMessageBox.warning(self, "Create Post Error", "Cannot Create Post Properly")
-           self.post_text.setText("")
-           self.post_title.setText("")
-    
-    #retrieves post containing keyword in text 
-    def retrieve_post_btn_clicked(self): 
-        self.post_retrieved.clear()
-        keyword = self.post_keyword.text()
-
-        try: 
-            post_li = self.controller.retrieve_posts(keyword)
-
-            if len(post_li) > 0: 
-                for post in post_li: 
-                    self.post_retrieved.appendPlainText(str(post))
-            else: 
-                QMessageBox.warning(None, "Error", "No matching Posts")
-
-        except (NoCurrentBlogException, IllegalAccessException):
-            pass
         
-        self.post_keyword.clear()
-    
-    #updates a post 
-    def update_post_btn_clicked(self): 
-        code = self.post_code.text() 
-        title = self.post_new_title.text()
-        text = self.post_new_text.text()
-        
-        try: 
-            self.controller.update_post(int(code), title, text)
-        
-        except (NoCurrentBlogException, IllegalAccessException): 
-            pass
-        
-        self.post_code.clear()
-        self.post_new_title.clear()
-        self.post_new_text.clear()
-
-    #delete post 
-    def delete_post_btn_clicked(self): 
-        code = self.delete_post_code.text()
-        try: 
-            if self.controller.delete_post(int(code)): 
-                QMessageBox.information(self, "success", "Post Deleted Successfully!")
-            else: 
-                QMessageBox.warning(self, "failure", "Post Was Not Deleted Successfully")
-                
-        except (NoCurrentBlogException, IllegalAccessException):
-                pass 
-        
-        self.delete_post_code.clear()
-    
-    #list posts 
+        #list posts 
     def list_posts_btn_clicked(self): 
   
-        self.list_posts.clear()
+        self.post_gui.list_posts.clear()
         self.stack.setCurrentIndex(14)
         try: 
             posts = self.controller.list_posts()
             for post in posts: 
-                self.list_posts.appendPlainText(str(post))
+                self.post_gui.list_posts.appendPlainText(str(post))
         except (NoCurrentBlogException, IllegalAccessException):
             pass
             
         
-        
+
 def main():
     app = QApplication(sys.argv)
     window = BloggingGUI()
