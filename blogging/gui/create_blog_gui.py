@@ -1,4 +1,5 @@
 import sys
+import re
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QGridLayout, QPushButton, QWidget, QLabel, QLineEdit, QMessageBox
 from blogging.controller import Controller 
@@ -48,15 +49,39 @@ class CreateBlogGUI:
         try: 
             if all([id, name, url, email]):
 
-                if self.controller.create_blog(id, name, url, email): 
-                    QMessageBox.information(None, "Success", "Blog Created Successfully!")
-                    self.clear_create_blog()
+                try:
+                    converted_id = int(id)
+
+                    if converted_id <= 0:
+                        raise ValueError
+                    
+                    else:
+                        if self.is_url(url):
+
+                            if self.is_email(email):
+
+                                if self.controller.create_blog(converted_id, name, url, email):
+
+                                    QMessageBox.information(None, "Success", "Blog Created Successfully!")
+                                    self.clear_create_blog()
+                                    return 3
+                                
+                            else:
+                                QMessageBox.warning(None, "Error", "You Must Use A Valid Email")
+                                return 3
+                                
+                        else:    
+                            QMessageBox.warning(None, "Error", "You Must Use A Valid URL")
+                            return 3
+                
+                except ValueError:
+                    QMessageBox.warning(None, "Error", "ID Must Be An Integer > 0")
                     return 3
 
             else:
                 QMessageBox.warning(None, "Error", "You Must Fill All Fields")
                 return 3
-
+            
         except IllegalOperationException: 
             QMessageBox.warning(None, "Error", "Blog Cannot Have the Same ID as Another Blog.")
             self.clear_create_blog()
@@ -74,4 +99,11 @@ class CreateBlogGUI:
         self.url_text.setText("")
         self.email_text.setText("")
 
+    def is_email(self, email):
+        valid_email = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        return re.match(valid_email, email) is not None
+
+    def is_url(self, url):
+        valid_url = r'^(https?://)?(www\.)?[\w\-]+\.[a-z]{2,}(/[\w\./?%&=-]*)?$'
+        return re.match(valid_url, url) is not None
     
