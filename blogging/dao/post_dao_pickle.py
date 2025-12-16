@@ -47,7 +47,7 @@ class PostDAOPickle(PostDAO):
 
         for p in self.posts:                       #loop over posts in blog
 
-            if ((search_string in p.title) or (search_string in p.text)):   #check keyword in text or title 
+            if ((search_string.lower() in p.title.lower()) or (search_string.lower() in p.text.lower())):   #check keyword in text or title 
 
                 posts_retrieved.append(p)                       #append post to list 
 

@@ -45,7 +45,7 @@ class BlogDAOJSON(BlogDAO):
         retrieved_blogs = []
         
         for b in self.blogs:
-            if keyword in b.name:
+            if keyword.lower() in b.name.lower():
                 retrieved_blogs.append(b)
 
         return retrieved_blogs

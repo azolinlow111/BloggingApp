@@ -39,7 +39,7 @@ class RetrievePostGUI:
 
                 if len(post_li) > 0: 
                     for post in post_li: 
-                        self.post_retrieved.appendPlainText(str(post))
+                        self.post_retrieved.appendPlainText(f"Code: {post.code} {post}")
                 else: 
                     QMessageBox.warning(None, "Error", "No matching Posts")
             
