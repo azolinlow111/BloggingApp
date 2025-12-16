@@ -8,6 +8,8 @@ from blogging.exception.invalid_logout_exception import InvalidLogoutException
 from blogging.exception.illegal_access_exception import IllegalAccessException
 from blogging.exception.illegal_operation_exception import IllegalOperationException
 from blogging.exception.no_current_blog_exception import NoCurrentBlogException
+from blogging.exception.non_matching_password_exception import NonMatchingPasswords
+from blogging.exception.username_in_use_exception import UsernameInUse
 from blogging.dao.blog_dao_json import BlogDAOJSON
 
 class Controller:
@@ -29,6 +31,23 @@ class Controller:
                 self.users_passwords[username] = password
         
     
+    def create_account(self, username, pass1, pass2):
+
+        if username in self.users_passwords:
+            raise UsernameInUse
+        
+        if pass1 != pass2:
+            raise NonMatchingPasswords
+        
+        hashed_pass = self.get_password_hash(pass1)
+
+        self.users_passwords[username] = hashed_pass
+
+        with open(self.users_file, 'a') as file:
+            file.write(f"{username},{hashed_pass}\n")
+
+        return True
+
     def get_password_hash(self, password):
         encoded_password = password.encode('utf-8')     # Convert the password to bytes
         hash_object = hashlib.sha256(encoded_password)      # Choose a hashing algorithm (e.g., SHA-256)

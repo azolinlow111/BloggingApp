@@ -136,6 +136,7 @@ class BloggingGUI(QMainWindow):
         self.stack.addWidget(self.update_post_gui.update_post_widget) #12
         self.stack.addWidget(self.delete_post_gui.delete_post_widget) #13
         self.stack.addWidget(self.list_posts_gui.list_posts_widget) #14
+        self.stack.addWidget(self.login_gui.create_acc_widget) # 15
 
         self.setCentralWidget(self.stack)
 
@@ -144,6 +145,7 @@ class BloggingGUI(QMainWindow):
         self.login_gui.quit_btn.clicked.connect(self.quit_btn_clicked)
         self.login_gui.login_btn.clicked.connect(self.login_btn_clicked)
         self.logout_btn_main.clicked.connect(self.logout_btn_clicked)
+        self.login_gui.create_account_btn_main.clicked.connect(self.create_account_btn_clicked_main)
 
         # blog button clicks
         self.list_all_blogs_btn_main.clicked.connect(self.list_all_blogs_btn_clicked)
@@ -176,6 +178,7 @@ class BloggingGUI(QMainWindow):
         self.update_blog_gui.go_back_btn5.clicked.connect(self.go_back_btn_clicked)
         self.delete_blog_gui.go_back_btn6.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn7.clicked.connect(self.go_back_btn_clicked)
+        self.login_gui.go_back_btn8.clicked.connect(self.go_back_btn_clicked_login)
 
         # post go back buttons
         self.finish_editing_btn_main.clicked.connect(self.go_back_btn_clicked)
@@ -202,9 +205,21 @@ class BloggingGUI(QMainWindow):
     def quit_btn_clicked(self): 
         self.close()
 
+    def create_account_btn_clicked_main(self):
+        self.stack.setCurrentIndex(15)
+        self.login_gui.create_account_btn.clicked.connect(self.create_account_btn_clicked)
+
+    def create_account_btn_clicked(self):
+        i = self.login_gui.create_account_btn_clicked()
+
+        self.stack.setCurrentIndex(i)
+
     # --- GO BACK BUTTON ---
     def go_back_btn_clicked(self):
         self.stack.setCurrentIndex(1)
+
+    def go_back_btn_clicked_login(self):
+        self.stack.setCurrentIndex(0)
 
     # --- BLOG FUNCTIONS --- 
     # --- EDIT BLOG ---
