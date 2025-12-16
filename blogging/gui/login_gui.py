@@ -24,17 +24,41 @@ class LoginGUI:
         self.password_text = QLineEdit()
         
         #add to login_layout
-        self.login_layout.addWidget(self.create_account_btn_main, 0, 0)
+        self.login_layout.addWidget(self.create_account_btn_main, 0, 0, 1, 2, Qt.AlignmentFlag.AlignRight)
         self.login_layout.addWidget(self.username_label, 1,0)
         self.login_layout.addWidget(self.username_text, 1,1)
         self.login_layout.addWidget(self.password_label , 2, 0)
         self.login_layout.addWidget(self.password_text, 2,1)
-        self.login_layout.addWidget(self.login_btn, 3,1)
-        self.login_layout.addWidget(self.quit_btn, 3, 0)
+        self.login_layout.addWidget(self.quit_btn, 3, 0, Qt.AlignmentFlag.AlignLeft)
+        self.login_layout.addWidget(self.login_btn, 3, 1, Qt.AlignmentFlag.AlignRight)
+
+        self.password_text.setEchoMode(QLineEdit.EchoMode.Password)
     
         self.login_widget = QWidget()
         self.login_widget.setLayout(self.login_layout)
 
+        # styling for login
+        self.login_layout.setSpacing(12)
+        self.login_layout.setContentsMargins(40, 40, 40, 40)
+        self.username_text.setFixedHeight(36)
+        self.password_text.setFixedHeight(36)
+        self.login_btn.setFixedHeight(40)
+        self.login_btn.setMinimumWidth(120)
+        self.quit_btn.setFixedHeight(36)
+        self.create_account_btn_main.setFixedHeight(32)
+        self.username_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        self.password_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+
+        self.quit_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #444;
+            }
+            QPushButton:hover {
+                background-color: #666;
+            }
+        """)
+
+        self.login_widget.setStyleSheet(self.styles())
 
         # create account layout
         self.create_acc_layout = QGridLayout()
@@ -57,8 +81,33 @@ class LoginGUI:
         self.create_acc_layout.addWidget(self.create_account_btn, 3, 1)
         self.create_acc_layout.addWidget(self.go_back_btn8, 3, 0)
 
+        self.add_pass_text.setEchoMode(QLineEdit.EchoMode.Password)
+        self.confirm_pass_text.setEchoMode(QLineEdit.EchoMode.Password)
+
         self.create_acc_widget = QWidget()
         self.create_acc_widget.setLayout(self.create_acc_layout)
+
+        # styling for create account
+        self.create_acc_layout.setSpacing(12)
+        self.create_acc_layout.setContentsMargins(24, 24, 24, 24)
+        self.create_acc_layout.setColumnStretch(0, 1)
+        self.create_acc_layout.setColumnStretch(1, 2)
+
+        for field in (
+            self.add_username_text,
+            self.add_pass_text,
+            self.confirm_pass_text
+        ):
+            field.setMinimumHeight(36)
+
+        for btn in (
+            self.create_account_btn,
+            self.go_back_btn8
+        ):
+            btn.setMinimumHeight(40)
+
+        self.create_acc_widget.setStyleSheet(self.styles())
+
 
     #call login controller with input user and password 
     def login_btn_clicked(self): 
@@ -90,6 +139,7 @@ class LoginGUI:
         if all([username, pass1,pass2]):
             try:
                 if self.controller.create_account(username, pass1, pass2):
+                    QMessageBox.information(None, "Success", "Account Created Successfully")
                     self.add_username_text.setText("")
                     self.add_pass_text.setText("")
                     self.confirm_pass_text.setText("")
@@ -113,4 +163,36 @@ class LoginGUI:
     def clear_login(self):
         self.username_text.setText("")
         self.password_text.setText("")
-        
+    
+    def styles(self):
+        return """
+            QWidget {
+                background-color: #121212;
+                color: #E0E0E0;
+                font-size: 14px;
+            }
+
+            QLabel {
+                color: #E0E0E0;
+            }
+
+            QLineEdit {
+                background-color: #1E1E1E;
+                border: 1px solid #444;
+                border-radius: 6px;
+                padding: 6px;
+                color: white;
+            }
+
+            QPushButton {
+                background-color: #1E90FF;
+                color: white;
+                border-radius: 8px;
+                padding: 8px;
+                font-weight: bold;
+            }
+
+            QPushButton:hover {
+                background-color: #1C86EE;
+            }
+        """

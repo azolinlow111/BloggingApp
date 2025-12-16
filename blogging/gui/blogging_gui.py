@@ -28,9 +28,8 @@ class BloggingGUI(QMainWindow):
         self.configuration = Configuration()
         self.configuration.__class__.autosave = True
         self.controller = Controller()
-        self.setMinimumSize(500,500)
+        self.setMinimumSize(360, 280)
         
-       
         self.retrieve_blogs_gui = RetrieveBlogsGUI(self.controller)
         self.list_blogs_gui = ListBlogsGUI(self.controller)
         self.login_gui = LoginGUI(self.controller)
