@@ -19,6 +19,7 @@ from blogging.gui.delete_post_gui import DeletePostGUI
 from blogging.gui.retrieve_post_gui import RetrievePostGUI
 from blogging.gui.update_post_gui import UpdatePostGUI
 from blogging.gui.list_posts_gui import ListPostGUI
+from blogging.gui.profile_gui import ProfileGUI
 
 class BloggingGUI(QMainWindow):
     # initiate blogging gui class
@@ -42,6 +43,7 @@ class BloggingGUI(QMainWindow):
         self.retrieve_post_gui = RetrievePostGUI(self.controller)
         self.update_post_gui = UpdatePostGUI(self.controller)
         self.list_posts_gui = ListPostGUI(self.controller)
+        self.profile_gui = ProfileGUI(self.controller)
         
         self.setWindowTitle("Blogging System")
 
@@ -50,6 +52,7 @@ class BloggingGUI(QMainWindow):
 
         # create content for main menu
         self.main_menu_label = QLabel("Please Select an Option")
+        self.profile_btn_main = QPushButton("Profile")
         self.create_blog_btn_main = QPushButton("Create New Blog")
         self.search_blog_btn_main = QPushButton("Search for a Blog by ID")
         self.retrieve_blog_btn_main = QPushButton("Retrieve Blogs by Name")
@@ -61,6 +64,7 @@ class BloggingGUI(QMainWindow):
 
         # add menu items to layout
         self.main_menu_layout.addWidget(self.main_menu_label, 0,0)
+        self.main_menu_layout.addWidget(self.profile_btn_main, 0,1)
         self.main_menu_layout.addWidget(self.create_blog_btn_main, 1,0)
         self.main_menu_layout.addWidget(self.search_blog_btn_main, 2,0)
         self.main_menu_layout.addWidget(self.retrieve_blog_btn_main, 3,0)
@@ -136,6 +140,7 @@ class BloggingGUI(QMainWindow):
         self.stack.addWidget(self.delete_post_gui.delete_post_widget) #13
         self.stack.addWidget(self.list_posts_gui.list_posts_widget) #14
         self.stack.addWidget(self.login_gui.create_acc_widget) # 15
+        self.stack.addWidget(self.profile_gui.profile_widget) # 16
 
         self.setCentralWidget(self.stack)
 
@@ -145,6 +150,7 @@ class BloggingGUI(QMainWindow):
         self.login_gui.login_btn.clicked.connect(self.login_btn_clicked)
         self.logout_btn_main.clicked.connect(self.logout_btn_clicked)
         self.login_gui.create_account_btn_main.clicked.connect(self.create_account_btn_clicked_main)
+        self.profile_btn_main.clicked.connect(self.profile_btn_clicked_main)
 
         # blog button clicks
         self.list_all_blogs_btn_main.clicked.connect(self.list_all_blogs_btn_clicked)
@@ -178,6 +184,7 @@ class BloggingGUI(QMainWindow):
         self.delete_blog_gui.go_back_btn6.clicked.connect(self.go_back_btn_clicked)
         self.go_back_btn7.clicked.connect(self.go_back_btn_clicked)
         self.login_gui.go_back_btn8.clicked.connect(self.go_back_btn_clicked_login)
+        self.profile_gui.go_back_btn9.clicked.connect(self.go_back_btn_clicked)
 
         # post go back buttons
         self.finish_editing_btn_main.clicked.connect(self.go_back_btn_clicked)
@@ -212,6 +219,9 @@ class BloggingGUI(QMainWindow):
         i = self.login_gui.create_account_btn_clicked()
 
         self.stack.setCurrentIndex(i)
+
+    def profile_btn_clicked_main(self):
+        self.stack.setCurrentIndex(16)
 
     # --- GO BACK BUTTON ---
     def go_back_btn_clicked(self):
