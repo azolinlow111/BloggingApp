@@ -28,7 +28,7 @@ class RetrievePostGUI:
         self.retrieve_post_widget = QWidget()
         self.retrieve_post_widget.setLayout(self.retrieve_post_layout)
     
-    #retrieves post containing keyword in text 
+    # retrieves post containing keyword in text 
     def retrieve_post_btn_clicked(self): 
         self.post_retrieved.clear()
         keyword = self.post_keyword.text()

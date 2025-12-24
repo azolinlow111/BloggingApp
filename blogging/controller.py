@@ -21,6 +21,7 @@ class Controller:
         self.users_passwords = {}
         self.autosave = Configuration.autosave
         self.users_file = Configuration.users_file
+        self.current_user = None
         
         # get usernames and passwords from file
         with open(self.users_file, 'r') as file: 
@@ -64,6 +65,7 @@ class Controller:
                 
                 if self.get_password_hash(password) == self.users_passwords.get(username):
                     self.login_status = True
+                    self.current_user = username
                     return True
 
                 else:
